@@ -36,6 +36,8 @@ namespace Common
 			Common::Cryptography::Crypt m_defaultCrypt{};
 			std::function<void(std::size_t)> m_onCloseSocketCallback{};
 			std::size_t m_id = 0;
+			std::uint32_t m_aid = 0;
+			std::string m_ip;
 
 			template<class T>
 			inline static std::unordered_map<std::uint16_t, std::function<void(const Packet&, T&)>> callbacks;
@@ -49,6 +51,9 @@ namespace Common
 				: m_socket{ std::move(socket) }
 				, m_onCloseSocketCallback{ fnct }
 			{
+				m_reader.reserve(1440);
+				m_socket.set_option(asio::ip::tcp::no_delay(true));
+
 				auto newID = sessionIdManager.getNewSessionID();
 				if (newID.has_value())
 				{
@@ -56,12 +61,13 @@ namespace Common
 				}
 				else
 				{
-					throw std::runtime_error("No available session IDs.");
+					closeSocket();
 				}
 			}
 
 			virtual ~Session()
 			{
+				closeSocket();
 				sessionIdManager.releaseSessionID(m_id);
 			}
 
@@ -69,6 +75,14 @@ namespace Common
 			{
 				m_id = id;
 			}
+
+			void setAccountId(std::uint32_t accountId)
+			{
+				m_aid = accountId;
+			}
+
+			std::uint32_t getAccountId() const noexcept { return m_aid; }
+			std::size_t getId() const;
 
 			void asyncWrite(const Common::Network::Packet& message);
 			void write();
@@ -81,11 +95,10 @@ namespace Common
 			std::size_t getBufferSize() const;
 			Common::Cryptography::Crypt getUserCrypt() const;
 			Common::Cryptography::Crypt getDefaultCrypt() const;
-			std::size_t getId() const;
 
 			void sendConnectionACK(Common::Enums::ServerType serverType);
 
-			
+
 			template<typename T>
 			static inline void addCallback(std::uint16_t idx, auto fnct)
 			{
