@@ -45,6 +45,22 @@ namespace Main
                             {
                                 disconnectPlayerIfOnline(request.substr(17));
                             }
+                            else if (request.find("get_session_id") == 0)
+                            {
+                                std::string arg = request.substr(15);
+                                std::uint32_t accountId = 0;
+                                auto [ptr, ec] = std::from_chars(arg.data(), arg.data() + arg.size(), accountId, 10);
+
+                                if (ec == std::errc{} && ptr == arg.data() + arg.size())
+                                {
+                                    handleGetSessionId(accountId);
+                                }
+                                else
+                                {
+                                    std::cerr << "Invalid account ID format for get_session_id: " << arg << "\n";
+                                    asio::async_write(m_socket, asio::buffer(std::string("fail\n")), [](auto, auto) {});
+                                }
+                            }
                         }
                     });
             }
@@ -63,34 +79,69 @@ namespace Main
             void disconnectPlayerIfOnline(const std::string& accountIDStr)
             {
                 auto self(shared_from_this());
+                auto response = std::make_shared<std::string>("not_removed");
 
                 std::uint32_t accountID;
-                auto [ptr, ec] = std::from_chars(accountIDStr.data(), accountIDStr.data() + accountIDStr.size(), accountID, 10);
+                auto [ptr, ec] = std::from_chars(accountIDStr.data(),
+                    accountIDStr.data() + accountIDStr.size(),
+                    accountID, 10);
 
-                std::string response = "removed";
                 if (ec != std::errc{} || ptr != accountIDStr.data() + accountIDStr.size())
                 {
-                    asio::async_write(m_socket, asio::buffer("Invalid account ID\n"),
-                        [this, self](asio::error_code ec, std::size_t length)
+                    auto errorMsg = std::make_shared<std::string>("Invalid account ID\n");
+                    asio::async_write(m_socket, asio::buffer(*errorMsg),
+                        [this, self, errorMsg](asio::error_code ec, std::size_t length)
                         {
+                            if (ec) { /* handle error */ }
                         });
-                    response = "not_removed"; 
+                    return;
                 }
 
-                auto targetSession = m_sessionsManager.getSessionByAccountId(accountID);
-                if (targetSession)
+                if (auto targetSession = m_sessionsManager.getSessionByAccountId(accountID))
                 {
-                    Common::Network::Packet response;
-                    response.setTcpHeader(targetSession->getId(), Common::Enums::USER_LARGE_ENCRYPTION);
-                    m_sessionsManager.removeSession(targetSession->getId());
-                    response.setOrder(73);
-                    response.setExtra(5);
-                    targetSession->asyncWrite(response);
+                    Common::Network::Packet pkt;
+                    pkt.setTcpHeader(targetSession->getId(), Common::Enums::USER_LARGE_ENCRYPTION);
+                    pkt.setOrder(73);
+                    pkt.setExtra(5);
+
+                    targetSession->asyncWrite(pkt); // Send disconnect first
+                    m_sessionsManager.removeSession(targetSession->getId()); // Then remove
+                    *response = "removed";
                 }
 
-                asio::async_write(m_socket, asio::buffer(response),
-                    [this, self](asio::error_code ec, std::size_t length)
+                asio::async_write(m_socket, asio::buffer(*response),
+                    [this, self, response](asio::error_code ec, std::size_t length)
                     {
+                        if (ec) { /* handle error */ }
+                    });
+            }
+            void handleGetSessionId(std::uint32_t accountId)
+            {
+                auto self(shared_from_this());
+
+                std::cerr << "AuthServer requested SessionID for AID: " << accountId << std::endl;
+
+                auto response = std::make_shared<std::string>();
+
+                if (auto targetSession = m_sessionsManager.getSessionByAccountId(accountId); targetSession)
+                {
+                    std::uint32_t sessionId = targetSession->getId();
+                    response->append("success ");
+                    response->append(std::to_string(sessionId));
+                    response->append("\n");
+                }
+                else
+                {
+                    response->append("fail\n");
+                }
+
+                asio::async_write(m_socket, asio::buffer(*response),
+                    [this, self, response](asio::error_code ec, std::size_t length)
+                    {
+                        if (ec)
+                        {
+                            std::cerr << "Error sending session ID response: " << ec.message() << "\n";
+                        }
                     });
             }
         };
