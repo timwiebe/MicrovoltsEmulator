@@ -16,11 +16,23 @@ namespace Main
 	{
 		inline Main::Enums::ChatGrade getChatGrade(Common::Enums::PlayerGrade playerGrade)
 		{
-			using PlayerGrade = Main::Enums::PlayerGrade;
+			using PlayerGrade = Common::Enums::PlayerGrade;
 			using ChatGrade = Main::Enums::ChatGrade;
-			if (playerGrade == PlayerGrade::GRADE_NORMAL) return static_cast<ChatGrade>(0);
-			else if (playerGrade == PlayerGrade::GRADE_MOD) return static_cast<Main::Enums::ChatGrade>(3);
-			return static_cast<Main::Enums::ChatGrade>(2);
+
+			switch (playerGrade)
+			{
+			case PlayerGrade::GRADE_NORMAL:
+				return ChatGrade::CHAT_NORMAL;
+			case PlayerGrade::GRADE_MOD:
+				return ChatGrade::CHAT_MOD;
+			case PlayerGrade::GRADE_GM:
+				return ChatGrade::CHAT_GM;
+			default:
+				std::cerr << "Warning: Unknown PlayerGrade ("
+					<< static_cast<int>(playerGrade)
+					<< "), defaulting to CHAT_NORMAL\n";
+				return ChatGrade::CHAT_NORMAL;
+			}
 		}
 
 		inline bool checkIfMuted(Main::Network::Session& session, std::uint32_t sessionId)
