@@ -184,8 +184,8 @@ namespace Main
 						totalMpBonus += mpBonus;
 					}
 
-					const auto gainedMp = isFarm ? 0 : ((scoreboardResponse.totalKills * 15 + scoreboardResponse.deaths * 5 + Common::Constants::matchBaseMp) * 2);
-					const auto gainedExp = isFarm ? 0 : ((scoreboardResponse.totalKills * 10 + scoreboardResponse.deaths * 5 + Common::Constants::matchBaseExp) * 2);
+					const auto gainedMp = isFarm ? 0 : ((scoreboardResponse.totalKills * 60 + scoreboardResponse.deaths * 25 + Common::Constants::matchBaseMp) * 3);
+					const auto gainedExp = isFarm ? 0 : ((scoreboardResponse.totalKills * 50 + scoreboardResponse.deaths * 25 + Common::Constants::matchBaseExp) * 3);
 
 					const auto finalGainedExp = gainedExp + (gainedExp * totalExpBonus / 100);
 					const auto finalGainedMp = gainedMp + (gainedMp * totalMpBonus / 100);
@@ -245,10 +245,10 @@ namespace Main
 
 						if (actualPlayerLevel >= 5 && actualPlayerLevel % 5 == 0)
 						{ // RT & coupon reward
-							const std::uint32_t rtToAdd = 2000 * (actualPlayerLevel / 5);
+							const std::uint32_t rtToAdd = 5000 * (actualPlayerLevel / 5);
 							targetSession->sendRt(rtToAdd);
-							targetSession->spawnCouponImmediate(5);
-							targetSession->sendMessage("You obtained " + std::to_string(rtToAdd) + " RockTokens and 5 coupons!");
+							targetSession->spawnCouponImmediate(10);
+							targetSession->sendMessage("You obtained " + std::to_string(rtToAdd) + " RockTokens and 10 coupons!");
 						}
 					}
 					else

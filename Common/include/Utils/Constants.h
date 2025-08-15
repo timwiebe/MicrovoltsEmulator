@@ -45,7 +45,7 @@ namespace Common
 		constexpr inline std::uint32_t clanRoomNumberStart = 151;
 		constexpr inline std::uint16_t matchBaseExp = 50;
 		constexpr inline std::uint16_t matchBaseMp = 150;
-		constexpr inline std::uint16_t maxExpAndMpPerMatch = 1500;
+		constexpr inline std::uint16_t maxExpAndMpPerMatch = 150000;
 		constexpr inline std::uint16_t clanBaseContribution = 100;
 		constexpr inline std::uint32_t goldLevelBox = 5336571;
 		constexpr inline std::uint32_t silverLevelBox = 5336570;
