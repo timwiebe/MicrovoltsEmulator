@@ -416,3 +416,4 @@ ExternalLibraries/vcpkg/
 MainServer/x64/
 MainServer/Release/
 Microvolts-Emulator-V2/
+ExternalLibraries/CommonLib/Common.lib
