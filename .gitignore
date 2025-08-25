@@ -417,3 +417,5 @@ MainServer/x64/
 MainServer/Release/
 Microvolts-Emulator-V2/
 ExternalLibraries/CommonLib/Common.lib
+ExternalLibraries/CommonLib/Common.lib
+*.lib
