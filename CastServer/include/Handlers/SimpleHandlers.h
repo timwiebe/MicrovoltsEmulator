@@ -210,7 +210,7 @@ namespace Cast
             Cast::Network::SessionsManager& sessionsManager, std::uint32_t m_serverId)
         {
             Common::Network::UnecryptedPacket response;
-            response.setTcpHeader(request.getSession());
+            response.setTcpHeader(session->getId());
             response.setCommand(72, 1, 0, request.getOption());
             session->asyncWrite(response);
 

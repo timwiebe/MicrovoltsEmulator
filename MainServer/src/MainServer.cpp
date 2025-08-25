@@ -308,14 +308,7 @@ namespace Main
 
 		// Boss battle - respawning
 		CN::Session::addCallback<CN::PacketType::ENCRYPTED, MN::Session>(329, [&](const Common::Network::Packet& request,
-			std::shared_ptr<Main::Network::Session> session) { std::cout << "329 called; Extra: " << (uint32_t)request.getExtra() << '\n';
-		auto response = request;
-		response.setExtra(1);
-		uint32_t data = 2;
-		response.setData(reinterpret_cast<std::uint8_t*>(&data), sizeof(data));
-		session->asyncWrite(response); });
-
-
+			std::shared_ptr<Main::Network::Session> session) { session->respawnBossBattle(); });
 
 		// CLANS -- TBA
 		// CLAN TODO ====> Handle client crash or client closed!

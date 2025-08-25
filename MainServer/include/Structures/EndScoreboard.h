@@ -64,6 +64,8 @@ namespace Main
 			{
 			}
 
+			ScoreboardResponse() = default;
+
 			std::array<std::uint32_t, 7> weaponKills() const
 			{
 				return 

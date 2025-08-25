@@ -48,12 +48,12 @@ namespace Main
 
                 auto& accountInfo = session->getAccountInfo();
 
-                constexpr std::uint32_t couponCost = 3'000;
+                constexpr std::uint32_t couponCost = 5'000;
                 constexpr std::uint32_t maxCoupons = 250;
 
                 if (accountInfo.rockTotens < couponCost)
                 {
-                    session->sendMessage("Error: you must have at least 3'000 RockTokens");
+                    session->sendMessage("Error: you must have at least 5'000 RockTokens");
                     return;
                 }
                 if (m_rtToConvert > accountInfo.rockTotens)
@@ -72,7 +72,7 @@ namespace Main
                 std::uint32_t couponsToSpawn = m_rtToConvert / couponCost;
                 if (couponsToSpawn == 0)
                 {
-                    session->sendMessage("Error: you must convert at least 3'000 RockTokens (1 coupon).");
+                    session->sendMessage("Error: you must convert at least 5'000 RockTokens (1 coupon).");
                     return;
                 }
 

@@ -22,6 +22,7 @@
 #include "../include/ChatCommands/Commands/OnlineCommand.h"
 #include "../include/ChatCommands/Commands/RandomCommands.h"
 #include "../include/ChatCommands/Commands/SendGift.h"
+#include "../include/ChatCommands/Commands/SendRewards.h"
 #include "../include/ChatCommands/Commands/SetCurrency.h"
 #include "../include/ChatCommands/Commands/SetEventCommands.h"
 #include "../include/ChatCommands/Commands/SetLevel.h"

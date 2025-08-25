@@ -1118,21 +1118,16 @@ namespace Main
 
 		bool Room::isEveryoneCsd() const
 		{
-			auto& pair = m_players[0];
-			auto hostSession = pair.second.lock();
-			if (!hostSession) return false;
-			if (m_players.empty()) return false;
-			bool ret = true;
-			for (auto& [roomInfo, session] : m_players)
-			{
-				if (auto actSession = session.lock(); actSession && roomInfo.state == Common::Enums::STATE_READY && !actSession->hasCsdItems())
-				{
-					hostSession->sendMessage("(error) Player " + std::string{ actSession->getAccountInfo().nickname } + " is not CSD");
-					ret = false;
-				}
-			}
-			return ret;
+			return checkWeapons(
+				[](const std::shared_ptr<Main::Network::Session>& s) { return s->hasCsdItems(); }, "is not CSD");
 		}
+
+		bool Room::isEveryoneBasic() const
+		{
+			return checkWeapons(
+				[](const std::shared_ptr<Main::Network::Session>& s) { return s->hasBasicItems(); }, "doesn't have basic weapons");
+		}
+
 
 		// Refactored
 		void Room::startMatch()
@@ -1159,6 +1154,7 @@ namespace Main
 				{
 					if (auto session = pair.second.lock())
 					{
+						session->m_totalBossBattleRespawnsLeft = 3;
 						setStateFor(pair, Common::Enums::PlayerState::STATE_NORMAL);
 
 						Main::ClientData::PlayerTeamInfo info;

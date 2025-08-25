@@ -175,6 +175,29 @@ namespace Main
 				return ret;
 			}
 
+			template <typename Predicate>
+			bool checkWeapons(Predicate&& pred, const std::string& failMessage) const
+			{
+				if (m_players.empty()) return false;
+
+				auto& pair = m_players[0];
+				auto hostSession = pair.second.lock();
+				if (!hostSession) return false;
+
+				bool ret = true;
+				for (auto& [roomInfo, session] : m_players)
+				{
+					if (auto actSession = session.lock();
+						actSession && roomInfo.state == Common::Enums::STATE_READY && !pred(actSession))
+					{
+						hostSession->sendMessage(
+							"(error) Player " + std::string{ actSession->getAccountInfo().nickname } + " " + failMessage
+						);
+						ret = false;
+					}
+				}
+				return ret;
+			}
 
 
 		public:
@@ -232,6 +255,7 @@ namespace Main
 			bool changePlayerTeam(const Main::Structures::UniqueId& uniqueId, std::uint32_t newTeam);
 			std::optional<std::uint32_t> getTeamForSession(std::uint32_t sessionId) const;
 			bool isEveryoneCsd() const;
+			bool isEveryoneBasic() const;
 
 			void muteRoom();
 			void unmuteRoom();	

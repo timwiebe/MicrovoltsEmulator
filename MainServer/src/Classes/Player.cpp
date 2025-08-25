@@ -331,6 +331,20 @@ namespace Main
 			m_friends[ffriend] = std::weak_ptr<Session>{};
 		}
 
+		std::optional<Main::Structures::ItemSerialInfo> Player::getBossBattleTicket() const
+		{
+			for (const auto& [itemNumber, item] : m_itemsByItemNumber)
+			{
+				const auto id = item.itemId.itemId;
+				if (id >= 4811300 && id <= 4811600)
+				{
+					return item.serialInfo; 
+				}
+			}
+			return std::nullopt; 
+		}
+
+
 		std::optional<Main::Structures::Friend> Player::addOnlineFriend(std::shared_ptr<Main::Network::Session> session)
 		{
 			if (session)

@@ -72,7 +72,7 @@ namespace Main
 			}
 		};
 
-		REGISTER_CMD(Join, Common::Enums::PlayerGrade::GRADE_TESTER)
+		REGISTER_CMD(Join, Common::Enums::PlayerGrade::GRADE_MOD)
 
 
 

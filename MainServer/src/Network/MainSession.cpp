@@ -349,6 +349,15 @@ namespace Main
 			targetSession->asyncWrite(m_packet);
 		}
 
+		bool Session::removeBossBattleTicket()
+		{
+			if (auto foundBossBattleSerialInfo = m_player.getBossBattleTicket())
+			{
+				return deleteItem(foundBossBattleSerialInfo.value(), "Boss Battle ticket removed automatically after starting Boss Battle match");
+			}
+			return false;
+		}
+
 		void Session::acceptFriendRequest(std::shared_ptr<Main::Network::Session> senderSession, const Main::Structures::Friend& target, const std::uint8_t* const data)
 		{
 			const auto& accountInfo = m_player.getAccountInfo();
@@ -1855,8 +1864,8 @@ namespace Main
 			const std::uint32_t index = eventMission.eventIndex;
 			if (m_eventMissions.find(index) == m_eventMissions.end())
 			{
-				sendMessage("[sendEventMission] error while sending event mission point (EventMissionIndex: " + std::to_string(index) + ", ActiveEventsSize: " + 
-					std::to_string(m_eventMissions.size()) + ") - please report this issue");
+				//sendMessage("[sendEventMission] error while sending event mission point (EventMissionIndex: " + std::to_string(index) + ", ActiveEventsSize: " + 
+					//std::to_string(m_eventMissions.size()) + ") - please report this issue");
 				return;
 			}
 			
@@ -1910,9 +1919,11 @@ namespace Main
 						m_player.getAccountID(), &Main::Persistence::PersistentDatabase::updatePlayerMissionProgress, m_player.getAccountID(),
 						eventIndex, Common::Constants::eventMissionTotal);
 
-					// Also send 10,000 RT for each event mission + 10 coupons
-					sendRt(10'000);
-					spawnCouponImmediate(10);
+					// Also send 5,000 RT for each event mission + 10 coupons
+					sendRt(5'000);
+					spawnCouponImmediate(5);
+					spawnItemCommand(4811300, "Item spawned automatically - event mission rewards");
+					sendMessage("You obtained 5'000 RT, 5 coupons and a Boss Battle ticket!", Main::Enums::TIP);
 				}
 				else
 				{
@@ -2137,22 +2148,23 @@ namespace Main
 
 		bool Session::hasCsdItems()
 		{
-			const auto equippedItems = m_player.getEquippedItemsFor(m_player.getAccountInfo().latestSelectedCharacter);
-			for (auto& equippedItem : equippedItems)
-			{
-				if (equippedItem.serialInfo.itemNumber == 0) continue;
-				const bool isEquippedItemCsd = Details::isCsdItem(
-					static_cast<Common::Enums::ItemType>(equippedItem.type),
-					equippedItem.id
-				);
+			return checkEquippedItems(Details::isCsdItem, "is not CSD");
+		}
 
-				if (!isEquippedItemCsd)
-				{
-					sendMessage("Item Type " + std::to_string(equippedItem.type) + " is not CSD");
-					return false;
-				}
+		bool Session::hasBasicItems()
+		{
+			return checkEquippedItems(Details::isBasicItem, "is not a basic item (Boss Battle requires basic weapons)");
+		}
+
+		void Session::respawnBossBattle()
+		{
+			if (m_totalBossBattleRespawnsLeft) 
+			{
+				m_packet.setCommand(329, 0, 1, 0);
+				m_packet.setData(reinterpret_cast<const std::uint8_t*>(&m_totalBossBattleRespawnsLeft), sizeof(m_totalBossBattleRespawnsLeft));
+				asyncWrite(m_packet);
+				--m_totalBossBattleRespawnsLeft;
 			}
-			return true;
 		}
 	};
 }

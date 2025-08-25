@@ -35,7 +35,6 @@ namespace Main
 			Main::Persistence::MainScheduler& m_scheduler;
 			Common::Network::Packet m_packet{};
 			Ac::AntiCheatManager& m_acManager;
-
 			std::mt19937 m_gen{ std::random_device{}() };
 			std::uniform_int_distribution<int> m_dist{ 1, 100 };
 
@@ -45,6 +44,7 @@ namespace Main
 			bool spawnCouponCommon(const std::uint32_t total, bool useAddItem);
 
 		public:
+			std::uint16_t m_totalBossBattleRespawnsLeft = 3;
 			std::uint64_t m_matchStartTime{};
 			bool m_hasCheckedMatchBan = false;
 			bool m_isInvisible{};
@@ -97,6 +97,24 @@ namespace Main
 				}
 			}
 
+			template <typename Predicate>
+			bool checkEquippedItems(Predicate&& pred, const std::string& failMessage)
+			{
+				const auto equippedItems = m_player.getEquippedItemsFor(m_player.getAccountInfo().latestSelectedCharacter);
+
+				for (const auto& equippedItem : equippedItems)
+				{
+					if (equippedItem.serialInfo.itemNumber == 0)
+						continue;
+
+					if (!pred(static_cast<Common::Enums::ItemType>(equippedItem.type), equippedItem.id))
+					{
+						sendMessage("Item Type " + std::to_string(equippedItem.type) + " " + failMessage);
+						return false;
+					}
+				}
+				return true;
+			}
 
 		public:
 			template<Main::Enums::ItemCurrencyType CT>
@@ -198,6 +216,8 @@ namespace Main
 
 			void acceptFriendRequest(std::shared_ptr<Main::Network::Session> senderSession, const Main::Structures::Friend& target, const std::uint8_t* const data);
 
+			bool removeBossBattleTicket();
+
 		private:
 			void handleOfflineFriendRequest(const AccountInfo& accountInfo, const char* nickname);
 			void handleOnlineFriendRequest(std::shared_ptr<Main::Network::Session> targetSession, const AccountInfo& accountInfo);
@@ -256,8 +276,6 @@ namespace Main
 			bool addItem(const Item& item, bool isCouponItem = false);
 
 			bool addItem(const Main::Structures::Giftbox& item);
-
-			bool addItemPacket(const Item& item);
 
 			bool addItems(const std::vector<BoughtItem>& boughtItems, bool areCouponItems = false);
 
@@ -422,6 +440,9 @@ namespace Main
 			bool spawnItem(std::uint32_t itemId, const Main::Structures::ItemSerialInfo& itemSerialInfo, const std::string& action);
 
 			bool hasCsdItems();
+			bool hasBasicItems();
+
+			void respawnBossBattle();
 		};
 	}
 }

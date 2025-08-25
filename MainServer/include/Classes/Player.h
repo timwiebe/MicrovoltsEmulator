@@ -131,8 +131,9 @@ namespace Main
 			void setUnequippedItems(const std::vector<Item>& items);
 			bool isItemTradeable(const Main::Structures::ItemSerialInfo& itemSerialInfo) const;
 			std::optional<std::uint32_t> findItemIdBySerialInfo(const Main::Structures::ItemSerialInfo& itemSerialInfo) const;
+			std::optional<Main::Structures::ItemSerialInfo> getBossBattleTicket() const;
 			std::optional<std::pair<std::uint32_t, std::uint32_t>>
-				findItemIdAndDurabilityBySerialInfo(const Main::Structures::ItemSerialInfo& itemSerialInfo) const;
+			findItemIdAndDurabilityBySerialInfo(const Main::Structures::ItemSerialInfo& itemSerialInfo) const;
 			std::optional<std::uint64_t> findMaxItemNumber() const;
 			bool prolongItem(const Main::Structures::ItemSerialInfo& newItemSerialInfo);
 			const std::array<EquippedItem, Common::Enums::MAX_CHARACTERS* Common::Enums::MAX_ITEMTYPE>& getEquippedItems() const;

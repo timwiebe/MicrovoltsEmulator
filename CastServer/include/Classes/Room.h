@@ -92,6 +92,8 @@ namespace Cast
 
 			void broadcastToMatch(Common::Network::UnecryptedPacket& packet);
 
+			void broadcastToMatchExceptSelf(Common::Network::UnecryptedPacket& packet, std::uint32_t selfId);
+
 			void playerForwardToHost(std::uint64_t hostSessionId, std::uint64_t senderSessionId, Common::Network::UnecryptedPacket& packet);
 
 			void hostForwardToPlayer(std::uint64_t, std::uint64_t playerId, Common::Network::UnecryptedPacket& packet, bool useHostIdInTcpHeader = true);

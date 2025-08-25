@@ -224,6 +224,29 @@ namespace Main
 			else return false;
 		}
 
+		inline bool isBasicItem(Common::Enums::ItemType itemType, std::uint32_t itemId)
+		{
+			using ItemType = Common::Enums::ItemType;
+			static const std::unordered_map<ItemType, std::unordered_set<std::uint32_t>> basicItems = {
+				{ ItemType::MELEE,   { 3010100 } },             
+				{ ItemType::RIFLE,   { 3020000 } },              
+				{ ItemType::SHOTGUN, { 3030000 } },           
+				{ ItemType::SNIPER,  { 3040000 } },             
+				{ ItemType::MG,      { 3050000 } },     
+				{ ItemType::BAZOOKA, { 3060000, 3060001 } },
+				{ ItemType::GRENADE, { 3070000 } }                      
+			};
+
+			if (itemType == ItemType::ACC_UPPER)
+				return true;
+
+			if (auto it = basicItems.find(itemType); it != basicItems.end())
+				return it->second.contains(itemId);
+
+			return false;
+		}
+
+
 		void broadcastPlayerItems(Main::Classes::RoomsManager& roomsManager, std::shared_ptr<Main::Network::Session> session, const Common::Network::Packet& request);
 	}
 }

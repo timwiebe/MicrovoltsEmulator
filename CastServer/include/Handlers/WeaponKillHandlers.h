@@ -89,18 +89,19 @@ namespace Cast
 			const auto targetUid = Cast::Details::parseData<Main::Structures::UniqueId>(request, 20);
 			const std::uint16_t targetHp = Cast::Details::parseData<std::uint16_t>(request, 24);
 
-			if (auto attackerSession = sessionsManager.getSession(attackerUid.session);
-				attackerSession &&
+			if (room->getMode() == Common::Enums::AiBattle || room->getMode() == Common::Enums::BossBattle)
+			{
+				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
+				return;
+			}
+
+			auto attackerSession = sessionsManager.getSession(attackerUid.session);
+			if (attackerSession &&
 				(attackerSession->m_team == Common::Enums::TEAM_OBSERVER || !attackerSession->m_isInMatch))
 			{
 				return;
 			}
 
-			if (room->getMode() == Common::Enums::AiBattle)
-			{
-				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
-				return;
-			}
 			if (auto targetSession = sessionsManager.getSession(targetUid.session))
 			{
 				if (targetHp)
@@ -129,7 +130,7 @@ namespace Cast
 						{
 							Cast::Handlers::sendPlayerStateUpdate(targetSession->getAccountId(), true);
 						}
-						if (auto attackerSession = sessionsManager.getSession(attackerUid.session))
+						if (attackerSession)
 						{
 							acManager.submitEvent(std::make_unique<Ac::PacketFloodingEvent>(attackerSession, 4, 1000, "Room Rape (flooding)", 265));
 						}
@@ -139,6 +140,7 @@ namespace Cast
 		}
 
 		// mg & shotgun
+		// issue: in boss battle, mg/shotgun work for NPCs, but they don't disappear when killed with mg/shotgun
 		inline void handleSpecialWeaponDamage(const Common::Network::UnecryptedPacket& request, std::shared_ptr<Cast::Network::Session> session, 
 			Cast::Classes::RoomsManager& roomsManager,
 			Cast::Network::SessionsManager& sessionsManager,
@@ -152,16 +154,16 @@ namespace Cast
 			auto targetUid = Cast::Details::parseDataFromEnd<Main::Structures::UniqueId>(request, 8);
 			auto attackerUid = Cast::Details::parseData<Main::Structures::UniqueId>(request, 16);
 
-			if (auto attackerSession = sessionsManager.getSession(attackerUid.session);
-				attackerSession &&
-				(attackerSession->m_team == Common::Enums::TEAM_OBSERVER || !attackerSession->m_isInMatch))
+			if (room->getMode() == Common::Enums::AiBattle || room->getMode() == Common::Enums::BossBattle)
 			{
+				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
 				return;
 			}
 
-			if (room->getMode() == Common::Enums::AiBattle)
+			auto attackerSession = sessionsManager.getSession(attackerUid.session);
+			if (attackerSession &&
+				(attackerSession->m_team == Common::Enums::TEAM_OBSERVER || !attackerSession->m_isInMatch))
 			{
-				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
 				return;
 			}
 
@@ -192,7 +194,7 @@ namespace Cast
 						{
 							Cast::Handlers::sendPlayerStateUpdate(targetSession->getAccountId(), true);
 						}
-						if (auto attackerSession = sessionsManager.getSession(attackerUid.session))
+						if (attackerSession)
 						{
 							acManager.submitEvent(std::make_unique<Ac::PacketFloodingEvent>(attackerSession, 4, 1000, "Room Rape (flooding)", 265));
 						}
@@ -209,15 +211,10 @@ namespace Cast
 			if (!roomOpt) return;
 			auto& room = *roomOpt;
 
-			if (request.getOption() == 0)
+		
+			if (request.getOption() == 0 || room->getMode() == Common::Enums::AiBattle || room->getMode() == Common::Enums::BossBattle)
 			{
 				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
-			}
-
-			if (room->getMode() == Common::Enums::AiBattle)
-			{
-				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
-				return;
 			}
 
 			for (std::uint32_t i = 0; i < request.getOption(); ++i)

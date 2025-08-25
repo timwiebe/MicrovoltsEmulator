@@ -169,6 +169,22 @@ namespace Cast
 			}
 		}
 
+		void Room::broadcastToMatchExceptSelf(Common::Network::UnecryptedPacket& packet, std::uint32_t selfId)
+		{
+			for (auto& currentPlayer : m_playersVec)
+			{
+				if (auto player = currentPlayer.lock())
+				{
+					if (!player->m_isInMatch) continue;
+					if (player->getId() == selfId) continue;
+
+					packet.setTcpHeader(player->getId());
+					player->asyncWrite(packet);
+				}
+			}
+		}
+
+
 		bool Room::isInMatch(std::uint64_t playerSessionId) const
 		{
 			auto it = std::find_if(m_playersVec.begin(), m_playersVec.end(),

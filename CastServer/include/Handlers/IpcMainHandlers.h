@@ -26,16 +26,13 @@ namespace Cast
             if (!roomOpt) return;
             auto& room = *roomOpt;
 
-            if (auto s = sm.getSession(session->getId()))
+            if (auto s = sm.getSession(request.getSession()))
             {
                 if (request.getExtra() == 0)  s->m_isInvisible = false;
                 else if (request.getExtra() == 1)  s->m_isInvisible = true;
             }
-            else
-            {
-                if (request.getExtra() == 2)  room->m_isInvisible = true;
-                else if (request.getExtra() == 3) room->m_isInvisible = false;
-            }
+            if (request.getExtra() == 2)  room->m_isInvisible = true;
+            else if (request.getExtra() == 3) room->m_isInvisible = false;
         }
 
         inline void handleAssassinMode(const Common::Network::UnecryptedPacket& request, std::shared_ptr<Common::Network::Session> session,

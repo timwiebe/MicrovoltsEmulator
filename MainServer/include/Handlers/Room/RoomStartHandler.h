@@ -70,6 +70,7 @@ namespace Main
 					if (room->isHost(selfUniqueId))
 					{
 						if (room->isCsdMode() && !room->isEveryoneCsd()) return;
+						if (room->getRoomSettings().mode == Common::Enums::BossBattle && !room->isEveryoneBasic()) return;
 
 						room->generateMapIfRandom();
 
@@ -119,10 +120,16 @@ namespace Main
 								clanRooms.second->updatePartyStatus(true);
 							}
 						}
+						if (room->getRoomSettings().mode == Common::Enums::BossBattle && !session->removeBossBattleTicket())
+						{
+							session->sendMessage("[Handlers::handleRoomStart] Could not find boss battle ticket - if this is an error, report it");
+							return;
+						}
 						room->startMatch();
 					}
 					else if (room->hasMatchStarted())
 					{
+						session->m_totalBossBattleRespawnsLeft = 3;
 						room->setStateFor(selfUniqueId, Common::Enums::PlayerState::STATE_NORMAL);
 
 						Main::ClientData::PlayerTeamInfo info;
@@ -153,7 +160,7 @@ namespace Main
 					if (room->isHost(selfUniqueId)) 
 					{ // broadcast the tick to the room
 						const std::uint64_t roomTick = Details::getUtcTimeMs() - timeSinceLastServerRestart;
-						response.setCommand(258, 0, 1, 0);
+						response.setCommand(258, 0, 1, 0);  // What's extra 5 here?
 						response.setData(reinterpret_cast<const std::uint8_t*>(&roomTick), sizeof(roomTick));
 						room->broadcastToRoom(response);
 					}

@@ -82,6 +82,19 @@ namespace Cast
 			playerRoom->broadcastToMatch(packet);
 		}
 
+		void RoomsManager::broadcastToMatchExceptSelf(std::uint64_t sessionId, Common::Network::UnecryptedPacket& packet)
+		{
+			if (sessionId >= m_playerSessionIdToRoom.size())
+				return;
+
+			auto& playerRoom = m_playerSessionIdToRoom[sessionId];
+
+			if (!playerRoom)
+				return;
+
+			playerRoom->broadcastToMatchExceptSelf(packet, sessionId);
+		}
+
 		void RoomsManager::broadcastToRoomExceptSelfAndHost(std::uint64_t sessionId, std::uint64_t hostSessionId, Common::Network::UnecryptedPacket& packet)
 		{
 			if (sessionId >= m_playerSessionIdToRoom.size())
