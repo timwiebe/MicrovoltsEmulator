@@ -82,7 +82,11 @@ namespace Cast
 			Cast::Classes::RoomsManager& roomsManager, Cast::Network::SessionsManager& sessionsManager, Ac::AntiCheatManager& acManager)
 		{
 			auto roomOpt = roomsManager.getRoom(session->getId());
-			if (!roomOpt) return;
+			if (!roomOpt)
+			{
+				session->asyncWrite(const_cast<Common::Network::UnecryptedPacket&>(request));
+				return;
+			}
 			auto& room = *roomOpt;
 
 			const auto attackerUid = Cast::Details::parseData<Main::Structures::UniqueId>(request, 16);
@@ -147,7 +151,11 @@ namespace Cast
 			Ac::AntiCheatManager& acManager)
 		{
 			auto roomOpt = roomsManager.getRoom(session->getId());
-			if (!roomOpt) return;
+			if (!roomOpt)
+			{
+				session->asyncWrite(const_cast<Common::Network::UnecryptedPacket&>(request));
+				return;
+			}
 			auto& room = *roomOpt;
 
 			std::uint16_t targetHp = Cast::Details::parseDataFromEnd<std::uint16_t>(request, 6);
@@ -208,10 +216,13 @@ namespace Cast
 			Cast::Network::SessionsManager& sessionsManager)
 		{
 			auto roomOpt = roomsManager.getRoom(session->getId());
-			if (!roomOpt) return;
+			if (!roomOpt)
+			{
+				session->asyncWrite(const_cast<Common::Network::UnecryptedPacket&>(request));
+				return;
+			}
 			auto& room = *roomOpt;
 
-		
 			if (request.getOption() == 0 || room->getMode() == Common::Enums::AiBattle || room->getMode() == Common::Enums::BossBattle)
 			{
 				roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));

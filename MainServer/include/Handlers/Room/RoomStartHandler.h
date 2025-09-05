@@ -70,8 +70,6 @@ namespace Main
 					if (room->isHost(selfUniqueId))
 					{
 						if (room->isCsdMode() && !room->isEveryoneCsd()) return;
-						if (room->getRoomSettings().mode == Common::Enums::BossBattle && !room->isEveryoneBasic()) return;
-
 						room->generateMapIfRandom();
 
 						if (!Main::Ipc::M2C_sendMapId(selfUniqueId.session, room->getActualMap(), room->getRoomSettings().mode))

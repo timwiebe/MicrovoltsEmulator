@@ -1919,7 +1919,7 @@ namespace Main
 						m_player.getAccountID(), &Main::Persistence::PersistentDatabase::updatePlayerMissionProgress, m_player.getAccountID(),
 						eventIndex, Common::Constants::eventMissionTotal);
 
-					// Also send 5,000 RT for each event mission + 10 coupons
+					// Also send 5,000 RT for each event mission + 10 coupons + boss battle ticket
 					sendRt(5'000);
 					spawnCouponImmediate(5);
 					spawnItemCommand(4811300, "Item spawned automatically - event mission rewards");

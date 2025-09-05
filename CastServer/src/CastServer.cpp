@@ -86,7 +86,7 @@ namespace Cast
 		// Unknown
 		Common::Network::Session::addCallback<CN::PacketType::UNECRYPTED, Session>(280, [&](const Common::Network::UnecryptedPacket& request,
 			std::shared_ptr<Cast::Network::Session> session) {
-				m_roomsManager.playerForwardToHost(session->getId(), request.getSession(), const_cast<Common::Network::UnecryptedPacket&>(request));
+				m_roomsManager.playerForwardToHost(request.getSession(), session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));
 			});
 
 		// AI Battle
@@ -240,9 +240,9 @@ namespace Cast
 
 		// Reminder: do not broadcast the following packets to the whole room, otherwise "next round" elimination bug happens
 		// Boss battle - main npcs movement/position, including boss position & small npcs positions
-		Common::Network::Session::addCallback<CN::PacketType::UNECRYPTED, Session>(282,[&](const Common::Network::UnecryptedPacket& request,
+		Common::Network::Session::addCallback<CN::PacketType::UNECRYPTED, Session>(282, [&](const Common::Network::UnecryptedPacket& request,
 			std::shared_ptr<Cast::Network::Session> session)
-			{ m_roomsManager.broadcastToMatch(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));});
+			{ m_roomsManager.broadcastToMatchExceptSelf(session->getId(), const_cast<Common::Network::UnecryptedPacket&>(request));});
 
 
 		// Boss battle - npcs projectiles

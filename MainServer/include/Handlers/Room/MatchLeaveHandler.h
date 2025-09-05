@@ -65,7 +65,7 @@ namespace Main
                             Main::Details::parseData<Main::Structures::ItemSerialInfo>(request, request.getDataSize() - sizeof(Main::Structures::ItemSerialInfo));
                        session->useNoPenalty(itemSerialInfo, request);
                     }
-                    else
+                    else if (room->getTeamForSession(session->getId()).value_or(0) != Common::Enums::TEAM_OBSERVER)
                     { // remove penalty mp
                         const auto currentMp = session->getPlayer().getAccountInfo().microPoints;
                         session->setAccountMicroPoints(currentMp <= 120 ? 0 : currentMp - 120);

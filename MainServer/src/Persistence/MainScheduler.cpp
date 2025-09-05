@@ -80,7 +80,6 @@ namespace Main
 
             m_databaseCallbacks.erase(accountId);
             m_databaseCallbacksIncremental.erase(accountId);
-            m_incrementalDifferentiationKey = 0;
         }
     };
 }

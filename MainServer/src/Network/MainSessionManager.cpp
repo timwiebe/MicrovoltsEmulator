@@ -141,7 +141,7 @@ namespace Main
 			for (auto& currentSession : m_sessionsVector)
 			{
 				if (selfSessionId == currentSession->getId()) continue;
-				if (selfAccountInfo.clanId == currentSession->getAccountInfo().clanId)
+				if (selfAccountInfo.clanId >= 8 && selfAccountInfo.clanId == currentSession->getAccountInfo().clanId)
 				{
 					currentSession->asyncWrite(message);
 				}

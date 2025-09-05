@@ -29,12 +29,10 @@ namespace Cast
             Cast::Structures::ClientPlayerInfoBasic playerPositionFromClient = Cast::Details::parseData<Cast::Structures::ClientPlayerInfoBasic>(request);
             if (playerPositionFromClient.isBad()) return;
 
-            /*
             if (room->m_isInvisible || session->m_isInvisible)
             {
                 playerPositionFromClient.position.positionZ = 0;
             }
-            */
 
             if (room->m_isAssassinMode)
             {

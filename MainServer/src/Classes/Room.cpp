@@ -1343,8 +1343,21 @@ namespace Main
 					{
 						matchEnd = Main::Enums::MATCH_DO_NOTHING;
 					}
-					session->storeEndMatchStats((Main::Details::getUtcTimeMs() - session->getMatchStartTime()) / 1000,
-						stats, matchEnd, hasLeveledUp, m_settings.mode == Common::Enums::ZombieMode,
+
+					const auto matchStartTime = session->getMatchStartTime();
+					const auto currentTime = Main::Details::getUtcTimeMs();
+					std::uint32_t matchDurationSeconds = 0;
+					if (matchStartTime != 0) 
+					{
+						const auto durationMs = currentTime - matchStartTime;
+						if (durationMs > 0) 
+						{
+							matchDurationSeconds = static_cast<uint32_t>(durationMs / 1000);
+							if (matchDurationSeconds > 7200) matchDurationSeconds = 0;
+						}
+					}
+
+					session->storeEndMatchStats(matchDurationSeconds, stats, matchEnd, hasLeveledUp, m_settings.mode == Common::Enums::ZombieMode,
 						session->getPlayer().getRoomNumber() >= Common::Constants::clanRoomNumberStart);
 
 					const std::uint32_t now = static_cast<std::uint32_t>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));

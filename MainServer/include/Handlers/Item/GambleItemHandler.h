@@ -50,7 +50,7 @@ namespace Main
 				}
 				if (Main::CdbUtils::getItemDuration(foundId.value()) != 0)
 				{
-					session->sendMessage("The gamble system can only be used for unlimited items");
+					session->sendMessage("The gamble system can only be used with unlimited items");
 					return;
 				}
 
@@ -71,7 +71,7 @@ namespace Main
 				}
 				else
 				{
-					session->sendMessage("[Handlers::handleGambleItem] error: no items available for this type after filtering - please report this issue");
+					session->sendMessage("[Handlers::handleGambleItem] Error: this item cannot be sealed!");
 					return;
 				}
 

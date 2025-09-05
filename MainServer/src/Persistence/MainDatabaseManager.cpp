@@ -197,7 +197,7 @@ namespace Main
             }
             catch (const sql::SQLException& e)
             {
-                ::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::addChatMessage");
+                return;
             }
         }
 
