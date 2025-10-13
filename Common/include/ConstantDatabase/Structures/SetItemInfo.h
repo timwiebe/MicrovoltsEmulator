@@ -2,13 +2,14 @@
 #define CGD_SET_ITEM_INFO_H
 
 #include "visit_struct/visit_struct.hpp"
-
+#include "Macros.h"
+#include <cstdint>
 
 namespace Common
 {
 	namespace ConstantDatabase
 	{
-#pragma pack(push,1)
+PACK_PUSH(1)
 		struct SetItemInfo
 		{
 			std::uint32_t si_id = static_cast<std::uint32_t>(-1);
@@ -26,7 +27,7 @@ namespace Common
 			constexpr std::uint32_t getId() const noexcept { return si_id; }
 			constexpr bool isValid() const noexcept { return si_id != static_cast<std::uint32_t>(-1); }
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

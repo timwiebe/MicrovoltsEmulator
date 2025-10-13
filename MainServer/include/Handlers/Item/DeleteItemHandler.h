@@ -4,6 +4,7 @@
 #include "../../Network/MainSession.h"
 #include "../../../include/Structures/AccountInfo/MainAccountInfo.h"
 #include "Network/Packet.h"
+#include <cstring> 
 
 namespace Main
 {

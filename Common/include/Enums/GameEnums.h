@@ -1,4 +1,4 @@
-	#ifndef COMMON_GAME_ENUMS_H
+#ifndef COMMON_GAME_ENUMS_H
 #define COMMON_GAME_ENUMS_H
 
 #include <cstdint>

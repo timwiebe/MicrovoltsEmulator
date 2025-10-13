@@ -2,12 +2,13 @@
 #define CDB_PACKAGE_INFOS_H
 
 #include "visit_struct/visit_struct.hpp"
+#include "Macros.h"
 
 namespace Common
 {
 	namespace ConstantDatabase
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CdbItemPackageInfo
 		{
 			std::uint32_t ip_id;
@@ -21,10 +22,9 @@ namespace Common
 			constexpr std::uint32_t getId() const noexcept { return ip_infoid; } // this is what the client sends when buying a weapon/item package
 			constexpr bool isValid() const noexcept { return ip_infoid != static_cast<std::uint32_t>(-1); }
 		};
-#pragma pack(pop)
+PACK_POP()
 
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CdbWeaponPackageInfo
 		{
 			std::uint32_t pi_id;
@@ -39,7 +39,7 @@ namespace Common
 			constexpr std::uint32_t getId() const noexcept { return pi_itemid; } // this is what the client sends when buying a weapon/item package
 			constexpr bool isValid() const noexcept { return pi_itemid != static_cast<std::uint32_t>(-1); }
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

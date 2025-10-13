@@ -7,6 +7,7 @@
 #include "../../Classes/RoomsManager.h"
 #include "../../Classes/ClanRoom.h"
 #include "../../Classes/ClansManager.h"
+#include <cstring> 
 
 namespace Main
 {
@@ -69,6 +70,11 @@ namespace Main
 					}
 					if (room->isHost(selfUniqueId))
 					{
+						if (room->getRoomSettings().mode == Common::Enums::BossBattle && room->getAllPlayers().size() > 4)
+						{
+							session->sendMessage("Error: Boss battle can only be started when there are 4 players (or less)");
+							return;
+						}
 						if (room->isCsdMode() && !room->isEveryoneCsd()) return;
 						room->generateMapIfRandom();
 

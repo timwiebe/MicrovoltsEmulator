@@ -4,25 +4,47 @@
 
 
 #include "../../include/Utils/Parser.h"
-#include "Windows.h"
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <corecrt.h>
+#endif
+
+
 #include <fstream>
 
 namespace Common
 {
 	namespace Parser
 	{
-		HANDLE hConsole = 0;
-		std::ofstream logFile("log.txt", std::ios::app);
+#ifdef _WIN32
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		void setConsoleColor(int color) 
+		{
+		    SetConsoleTextAttribute(hConsole, color);
+		}
+#else
+		void setConsoleColor(int color) {
+		
+		    switch(color) {
+		        case 2: std::cout << "\033[32m"; break; // green
+		        case 3: std::cout << "\033[36m"; break; // cyan
+		        case 5: std::cout << "\033[35m"; break; // magenta
+		        case 7: std::cout << "\033[0m";  break; // reset
+		        default: std::cout << "\033[0m"; break;
+		    }
+		}
+#endif
 
+		std::ofstream logFile("log.txt", std::ios::app);
 		void log(const std::string& message)
 		{
-			std::cout << message;
-
-			/*
-			if (logFile.is_open())
-			{
-				logFile << message << std::endl;
-			}*/
+		    std::cout << message;
+		    /*
+		    if (logFile.is_open()) {
+		        logFile << message << std::endl;
+		    }
+		    */
 		}
 
 		void printTcpHeader(Common::Protocol::TcpHeader header)
@@ -85,11 +107,11 @@ namespace Common
 	
 		void parse(std::uint8_t* data, std::size_t len, std::size_t port, const std::string& origin, const std::string& to, std::int32_t cryptKey, bool first)
 		{
-			SetConsoleTextAttribute(hConsole, 2);
+			setConsoleColor(2);
 			std::cout << "\n[" << origin << "->" << to << "]";
-			SetConsoleTextAttribute(hConsole, 3);
+			setConsoleColor(3);
 
-			SetConsoleTextAttribute(hConsole, 5);
+			setConsoleColor(5);
 			std::cout << "[Size:" << len << "] \n";
 
 
@@ -101,7 +123,7 @@ namespace Common
 			cryptDefault.RC5Decrypt32(data, data, 4);
 			std::uint32_t actualData;
 			memcpy(&actualData, data, sizeof(std::uint32_t));
-			SetConsoleTextAttribute(hConsole, 5);
+			setConsoleColor(5);
 
 			const Common::Protocol::TcpHeader header(actualData);
 			printTcpHeader(header);
@@ -110,7 +132,7 @@ namespace Common
 			const std::size_t actualSize = header.getSize();
 			cryptDefault.RC5Encrypt32(data, data, 4);
 
-			SetConsoleTextAttribute(hConsole, 7);
+			setConsoleColor(7);
 			for (std::size_t i = 0; i < actualSize; ++i)
 			{
 				printf("%02X ", static_cast<std::uint8_t>(data[i]));

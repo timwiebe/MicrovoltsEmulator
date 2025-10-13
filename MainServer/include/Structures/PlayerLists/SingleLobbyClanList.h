@@ -2,12 +2,13 @@
 #define SINGLE_LOBBY_CLAN_LIST_H
 
 #include "../../../include/Structures/AccountInfo/MainAccountUniqueId.h"
+#include "Macros.h"
 
 namespace Main
 {
     namespace Structures
     {
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SingleLobbyClanList
         {
             char name[16]{};
@@ -15,7 +16,7 @@ namespace Main
             std::uint16_t level : 7;
             std::uint16_t unkown = 0;
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

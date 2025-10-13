@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 #include "../Utils/Logger.h"
+#include <cstring> 
 
 namespace Common
 {

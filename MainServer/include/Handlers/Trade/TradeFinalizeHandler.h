@@ -10,14 +10,14 @@
 #include <optional>
 #include <array>
 #include "../../Structures/TradeSystem/TradeAck.h"
-
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Handlers
 	{
-#pragma pack(push)
-		struct TradeUnusedFinalItem
+PACK_PUSH(1)
+struct TradeUnusedFinalItem
 		{
 			char unused[8]{};
 			std::uint32_t totalNewMp{}; // This was used in the old trade system
@@ -26,9 +26,8 @@ namespace Main
 			std::uint32_t unusedTotal1{};
 			std::array<std::uint32_t, 10> itemIdsUnused{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-		// Currently: Both players need to relog to see their newly obtained items. However, after a trade their traded items are directly removed from their inventory.
 		inline void handleTradeFinalization(const Common::Network::Packet& request, std::shared_ptr<Main::Network::Session> session, 
 			Main::Network::SessionsManager& sessionsManager)
 		{
@@ -48,6 +47,20 @@ namespace Main
 
 					auto selfTradedItems = session->getTradedItems();
 					auto targetTradedItems = targetSession->getTradedItems();
+
+					if (!targetSession->getPlayer().hasEnoughInventorySpace(selfTradedItems.size()))
+					{
+						session->sendMessage("Error: the other player does not have enough inventory space. Cannot proceed!");
+						targetSession->sendMessage("Error: you do not have enough inventory space. Cannot proceed!");
+						return;
+					}
+					else if (!session->getPlayer().hasEnoughInventorySpace(targetTradedItems.size()))
+					{
+						targetSession->sendMessage("Error: the other player does not have enough inventory space. Cannot proceed!");
+						session->sendMessage("Error: you do not have enough inventory space. Cannot proceed!");
+						return;
+					}
+
 					std::uint64_t targetLatestItemNumber = targetSession->getPlayer().getLatestItemNumber();
 					std::uint64_t selfLatestItemNumber = session->getPlayer().getLatestItemNumber();
 
@@ -78,6 +91,7 @@ namespace Main
 					session->deleteItems(session->getTradedItems(), "Item deleted after it was traded to " + std::string{targetSession->getPlayer().getPlayerName()}
 						+ " (target AID: " + std::to_string(targetSession->getAccountInfo().accountID) + ")");
 					session->resetTradeInfo();
+
 					targetSession->deleteItems(targetSession->getTradedItems(), "Item deleted after it was traded to " + std::string{ session->getPlayer().getPlayerName() }
 						+ " (target AID: " + std::to_string(session->getAccountInfo().accountID) + ")");
 					targetSession->spawnItems(selfTradedItems, "Item received from trade, from user " + std::string{ session->getPlayer().getPlayerName() }

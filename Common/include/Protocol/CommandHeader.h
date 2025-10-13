@@ -3,12 +3,13 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include "Macros.h"
 
 namespace Common
 {
 	namespace Protocol
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		class CommandHeader
 		{
 		private:
@@ -50,7 +51,7 @@ namespace Common
 
 			std::uint32_t getOption() const;
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

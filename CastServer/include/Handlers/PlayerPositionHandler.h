@@ -11,6 +11,7 @@
 #include "AntiCheat/Event.h"
 #include "../Utils/Utilities.h"
 #include <Utils/Utils.h>
+#include <cstring> 
 
 namespace Cast
 {
@@ -28,6 +29,8 @@ namespace Cast
 
             Cast::Structures::ClientPlayerInfoBasic playerPositionFromClient = Cast::Details::parseData<Cast::Structures::ClientPlayerInfoBasic>(request);
             if (playerPositionFromClient.isBad()) return;
+            room->m_roomTick = playerPositionFromClient.matchTick;
+
 
             if (room->m_isInvisible || session->m_isInvisible)
             {
@@ -56,20 +59,15 @@ namespace Cast
             const auto fullSize = request.getFullSize();
             
 
-            if (fullSize == 36)
+            if (fullSize == 36) 
             {
                 Cast::Structures::ClientPlayerInfoBullet playerPositionBullet{};
                 std::memcpy(&playerPositionBullet, request.getData(), sizeof(playerPositionBullet));
-                if (playerPositionBullet.isBad())
-                {
-                    ::Utils::Logger::log("Bad Player Respawn Position", ::Utils::LogType::Warning, "Cast::handlePlayerPosition");
-                    return;
-                }
+                if (playerPositionBullet.isBad())  return;
 
                 PlayerInfoResponseWithBullets playerInfoResponseWithBullets;
                 playerInfoResponseWithBullets.specificInfo.enableBullet = true;
-
-                playerInfoResponseWithBullets.tick = playerPositionFromClient.matchTick;
+                playerInfoResponseWithBullets.specificInfo.enableJump = false;
                 playerInfoResponseWithBullets.position = playerPositionFromClient.position;
                 playerInfoResponseWithBullets.direction = playerPositionFromClient.direction;
                 playerInfoResponseWithBullets.specificInfo.animation1 = playerPositionFromClient.animation1;
@@ -82,9 +80,8 @@ namespace Cast
                 playerInfoResponseWithBullets.currentWeapon = playerPositionBullet.bulletStruct.bullet4;
 
                 response.setData(reinterpret_cast<std::uint8_t*>(&playerInfoResponseWithBullets), sizeof(playerInfoResponseWithBullets));
-
             }
-            else if (fullSize == 40)
+            else if (fullSize == 40) // bullet+jump+movement+rotation (simplified)
             {
                 Cast::Structures::ClientPlayerInfoComplete playerPositionComplete{};
                 std::memcpy(&playerPositionComplete, request.getData(), request.getDataSize());
@@ -96,8 +93,9 @@ namespace Cast
 
                 PlayerInfoResponseWithBullets playerInfoResponseWithBullets;
                 playerInfoResponseWithBullets.specificInfo.enableBullet = true;
+                playerInfoResponseWithBullets.specificInfo.enableJump = true;
 
-                playerInfoResponseWithBullets.tick = playerPositionFromClient.matchTick;
+              //  playerInfoResponseWithBullets.tick = playerPositionFromClient.matchTick;
                 playerInfoResponseWithBullets.position = playerPositionFromClient.position;
                 playerInfoResponseWithBullets.direction = playerPositionFromClient.direction;
                 playerInfoResponseWithBullets.specificInfo.animation1 = playerPositionFromClient.animation1;
@@ -108,9 +106,7 @@ namespace Cast
                 playerInfoResponseWithBullets.specificInfo.sessionId = static_cast<std::uint32_t>(session->getId());
                 playerInfoResponseWithBullets.bullets = playerPositionBullet.bulletStruct;
                 playerInfoResponseWithBullets.currentWeapon = playerPositionBullet.bulletStruct.bullet4;
-
                 PlayerInfoResponseComplete playerInfoResponseComplete{ playerInfoResponseWithBullets };
-                playerInfoResponseComplete.playerInfoBasicResponse.specificInfo.enableJump = true;
 
                 playerInfoResponseComplete.jump = playerPositionComplete.jumpStruct;
                 response.setData(reinterpret_cast<std::uint8_t*>(&playerInfoResponseComplete), sizeof(playerInfoResponseComplete));
@@ -118,7 +114,7 @@ namespace Cast
             else
             {
                 PlayerInfoBasicResponse playerInfoBasicResponse;
-                playerInfoBasicResponse.tick = playerPositionFromClient.matchTick;
+               // playerInfoBasicResponse.tick = playerPositionFromClient.matchTick;
                 playerInfoBasicResponse.position = playerPositionFromClient.position;
                 playerInfoBasicResponse.direction = playerPositionFromClient.direction;
                 playerInfoBasicResponse.currentWeapon = playerPositionFromClient.weapon;
@@ -128,7 +124,8 @@ namespace Cast
                 playerInfoBasicResponse.rotation2 = request.getOption();
                 playerInfoBasicResponse.rotation3 = playerPositionFromClient.rotation;
                 playerInfoBasicResponse.specificInfo.sessionId = static_cast<std::uint32_t>(session->getId());
-
+                playerInfoBasicResponse.specificInfo.enableJump = false;
+                playerInfoBasicResponse.specificInfo.enableBullet = false;
                 
                 if (fullSize == 28)
                 {
@@ -138,7 +135,6 @@ namespace Cast
                 {
                     playerInfoBasicResponse.specificInfo.enableJump = true;
                     PlayerInfoResponseWithJump playerInfoResponseWithJump{ playerInfoBasicResponse };
-                 
 
                     Cast::Structures::ClientPlayerInfoJump playerPositionJump{};
                     std::memcpy(&playerPositionJump, request.getData(), request.getDataSize());
@@ -154,8 +150,7 @@ namespace Cast
                 }
             }
             
-            // reminder: this is correct, dont use exceptSelf as that causes log errors in SysLog (host receives [322] command not found) 
-            room->broadcastToRoom(response);
+            room->enqueuePosition(std::move(response));
         }
     }
 }

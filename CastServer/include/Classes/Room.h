@@ -27,9 +27,13 @@ namespace Cast
 			std::uint32_t m_roomNumber = -1;
 			std::uint32_t m_serverId{};
 
+			std::vector<Common::Network::UnecryptedPacket> m_pendingPositions;
+
 		public:
 			bool m_hasMatchStarted{};
 			bool m_isInvisible{};
+			std::uint32_t m_roomTick{};
+
 
 			// Arena Mode
 			bool m_isArenaMode{};
@@ -124,6 +128,10 @@ namespace Cast
 			void shuffleCoordinates();
 
 			void respawnEveryoneArena();
+
+			void enqueuePosition(Common::Network::UnecryptedPacket&& pkt);
+
+			void flushPendingPositions();
 		};
 	}
 }

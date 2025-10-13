@@ -5,12 +5,14 @@
 #include "../Item/MainItemSerialInfo.h"
 #include "../../MainEnums.h"
 #include "../../Detail/CdbUtils.h"
+#include "Macros.h"
+
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CapsuleSpin
 		{
 			Main::Structures::ItemId itemId;
@@ -25,7 +27,7 @@ namespace Main
 				itemSerialInfo.itemOrigin = Main::Enums::ItemFrom::SHOP;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

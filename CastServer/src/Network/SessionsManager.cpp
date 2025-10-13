@@ -28,10 +28,6 @@ namespace Cast
 		void SessionsManager::removeSession(std::size_t sessionId)
 		{
 			// The player is inside a room
-			if (m_sessionsBySessionId.contains(sessionId) && m_sessionsBySessionId[sessionId] && m_sessionsBySessionId[sessionId]->getRoomNumber())
-			{
-				m_sessionsBySessionId[sessionId]->setIsInMatch(false);
-			}
 			if (m_sessionsBySessionId.contains(sessionId))
 			{
 				m_sessionsBySessionId[sessionId]->setIsInMatch(false);

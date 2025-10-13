@@ -1,13 +1,14 @@
-#ifndef INTERFACE_COMMAND_H
-#define INTERFACE_COMMAND_H
+#ifndef INTERFACE_COMMAND_HEADER
+#define INTERFACE_COMMAND_HEADER
 
 #include <string>
-#include <regex>
 #include "Network/Packet.h"
 #include "../Network/MainSession.h"
 #include "../Network/MainSessionManager.h"
 #include "Enums/PlayerEnums.h"
 #include "Utils/Utils.h"
+
+#include <regex>
 
 namespace Main
 {
@@ -34,18 +35,17 @@ namespace Main
 		class ICommand
 		{
 		protected:
-			std::regex m_pattern{};
+			std::regex m_pattern;
 			Common::Enums::PlayerGrade m_requiredGrade{};
 			std::string m_commandDescription{};
 
 			explicit ICommand(Common::Enums::PlayerGrade requiredGrade, const std::string& commandDescription, const std::string& regexPattern = "")
 				: m_requiredGrade{ requiredGrade }
 				, m_commandDescription{ commandDescription }
-				, m_pattern { regexPattern }
+				, m_pattern{ regexPattern }
 			{
 			}
-			ICommand(const ICommand&) = delete;
-			ICommand() = delete;
+			
 
 		private:
 			virtual bool parseCommand(const std::string& providedCommand) { return true; };

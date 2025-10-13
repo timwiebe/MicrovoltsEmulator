@@ -5,6 +5,8 @@
 #include "../AccountInfo/MainAccountUniqueId.h"
 #include "Utils/Constants.h"
 #include <array>
+#include "Macros.h"
+#include <cstring> 
 
 // This structure represents a single player in a given room
 
@@ -12,8 +14,7 @@ namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
-
+PACK_PUSH(1)
 		// Used to retrieve the infos or the players that are already in the room, then sent to the player that joined that room
 		struct RoomPlayerInfo
 		{
@@ -40,9 +41,9 @@ namespace Main
 				std::memcpy(this->playerName, playerName, Common::Constants::maxNicknameSize);
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		// Used to send the info of the player who joined to all the players that are already in the room
 		struct RoomLatestEnteredPlayerInfo
 		{
@@ -65,7 +66,7 @@ namespace Main
 			std::uint32_t unk : 16 = 0;
 			std::uint32_t unk2 : 16 = 0;
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 #endif

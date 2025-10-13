@@ -43,7 +43,7 @@ namespace Common
 		constexpr inline std::uint16_t maxClanRooms = 30;
 		constexpr inline std::uint16_t maxPartiesPerClan = 4;
 		constexpr inline std::uint32_t clanRoomNumberStart = 151;
-		constexpr inline std::uint16_t matchBaseExp = 50;
+		constexpr inline std::uint16_t matchBaseExp = 80;
 		constexpr inline std::uint16_t matchBaseMp = 150;
 		constexpr inline std::uint16_t maxExpAndMpPerMatch = 150000;
 		constexpr inline std::uint16_t clanBaseContribution = 100;

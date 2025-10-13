@@ -2,12 +2,13 @@
 #define SINGLE_LOBBY_LIST_H
 
 #include "../../../include/Structures/AccountInfo/MainAccountUniqueId.h"
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SinglePlayerInfoList
         {
             char name[16]{};
@@ -16,7 +17,7 @@ namespace Main
             std::uint64_t clanLogoBackId : 14;
             std::uint64_t level : 7;
         };
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

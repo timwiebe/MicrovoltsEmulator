@@ -1,7 +1,6 @@
 #ifndef MAIN_ITEM_INFO_H
 #define MAIN_ITEM_INFO_H
 
-#include <corecrt.h>
 #include <cstdint>
 #include "MainItemSerialInfo.h"
 #include "SpawnedItem.h"
@@ -11,17 +10,22 @@
 #include "../../Detail/CdbUtils.h"
 #include "../Mailbox.h"
 #include "../TradeSystem/TradeSystemItem.h"
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct Item
 		{
 			// note: If itemnumber = 0 AND creationDate = 0 ==> basic item
 			Main::Structures::ItemId itemId;
-			__time32_t expirationDate{};
+#ifdef _WIN32
+           		 __time32_t expirationDate{};
+#else
+             	 std::int32_t expirationDate{}; 
+#endif
 			ItemSerialInfo serialInfo{};
 			std::uint16_t durability{};
 			std::uint16_t energy{};
@@ -39,7 +43,11 @@ namespace Main
 			explicit Item(const Main::Structures::CapsuleSpin& capsuleItem)
 				: itemId{ capsuleItem.itemId }, serialInfo{ capsuleItem.itemSerialInfo }
 				, durability{ Main::CdbUtils::getItemDurability(capsuleItem.itemId.itemId ).value_or(0) }
-				, expirationDate{ static_cast<__time32_t>(capsuleItem.expirationDate) }
+#ifdef _WIN32
+                		, expirationDate{ static_cast<__time32_t>(capsuleItem.expirationDate) }
+#else
+                		, expirationDate{ static_cast<std::int32_t>(capsuleItem.expirationDate) }
+#endif
 			{
 				serialInfo.itemOrigin = Main::Enums::ItemFrom::SHOP;
 			}
@@ -54,16 +62,25 @@ namespace Main
 			}
 
 			/*explicit removed on purpose*/ Item(const Main::Structures::EquippedItem& equippedItem)
-				: itemId{ equippedItem.id }, serialInfo{ equippedItem.serialInfo }, expirationDate{ equippedItem.expirationDate }
+				: itemId{ equippedItem.id }, serialInfo{ equippedItem.serialInfo }
 				, durability{ equippedItem.durability }, energy{equippedItem.energy}, isSealed { equippedItem.isSealed }, sealLevel{equippedItem.sealLevel}
 				, experienceEnhancement{ equippedItem.experienceEnhancement }, mpEnhancement{ equippedItem.mpEnhancement }
+#ifdef _WIN32
+              		  	, expirationDate{ static_cast<__time32_t>(equippedItem.expirationDate) }
+#else
+                		, expirationDate{ static_cast<std::int32_t>(equippedItem.expirationDate) }
+#endif
 			{
 			}
 
 			Item(const Main::Structures::SpawnedItem& spawnedItem)
 				: itemId{ spawnedItem.itemId }, serialInfo{ spawnedItem.serialInfo } 
-				, expirationDate{ spawnedItem.expirationDate }
 				, durability{ Main::CdbUtils::getItemDurability(spawnedItem.itemId.itemId).value_or(0) }
+#ifdef _WIN32
+              		  	, expirationDate{ static_cast<__time32_t>(spawnedItem.expirationDate ) }
+#else
+                		, expirationDate{ static_cast<std::int32_t>(spawnedItem.expirationDate ) }
+#endif
 			{
 				serialInfo.itemOrigin = Main::Enums::ItemFrom::SHOP;
 				itemId.stock = spawnedItem.itemId.stock;
@@ -94,13 +111,13 @@ namespace Main
 				serialInfo.itemOrigin = 8;// Main::Enums::ItemFrom::SHOP;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
 		struct ItemLogInfo
 		{
 			std::uint64_t itemNumber{};
 			std::uint64_t itemId;
-			std::uint32_t expirationDate{};
+			std::int64_t expirationDate{};
 			std::string action;
 		};
 	}

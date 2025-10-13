@@ -3,12 +3,14 @@
 
 #include "visit_struct/visit_struct.hpp"
 #include <array>
+#include "Macros.h"
 
 namespace Common
 {
 	namespace ConstantDatabase
 	{
-#pragma pack(push, 1)
+
+PACK_PUSH(1)
 		struct CdbEffectInfo
 		{
 			std::uint32_t ei_id;
@@ -28,7 +30,7 @@ namespace Common
 			constexpr std::uint32_t getId() const noexcept { return ei_id; }
 			constexpr bool isValid() const noexcept { return ei_id != static_cast<std::uint32_t>(-1); }
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

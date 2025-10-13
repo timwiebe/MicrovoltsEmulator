@@ -4,7 +4,9 @@
 #include <ctime>
 #include <optional>
 
+#ifdef _WIN32
 #include <corecrt.h>
+#endif
 
 #include "../../include/Network/Session.h"
 #include "../../include/Utils/Parser.h"
@@ -22,7 +24,7 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/secblock.h>
 #include <cryptopp/oids.h> 
-
+#include <cstring>
 
 
 namespace Common
@@ -104,7 +106,7 @@ namespace Common
 					}
 					else
 					{
-						memcpy_s(&header, headerSize, m_reader.data(), headerSize);
+						std::memcpy(&header, m_reader.data(), headerSize);
 					}
 
 					if (header.getSize() >= 1450)
@@ -204,7 +206,7 @@ namespace Common
 					struct AuthAck
 					{
 						std::int32_t key{ static_cast<std::int32_t>(rand() + 1) };
-						__time32_t timestamp{ static_cast<__time32_t>(std::time(0)) };
+						std::uint32_t timestamp32 = static_cast<std::uint32_t>(std::time(nullptr));
 					} authAck;
 
 					m_crypt.KeySetup(authAck.key);

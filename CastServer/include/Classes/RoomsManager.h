@@ -14,8 +14,14 @@ namespace Cast
 		{
 		private:
 			std::array<std::shared_ptr<Cast::Classes::Room>, Common::Constants::maxSessionsPerServer + 1> m_playerSessionIdToRoom{};
+			std::vector<std::shared_ptr<Cast::Classes::Room>> m_rooms{};
 
 		public:
+			const auto& getAllRooms() const 
+			{
+				return m_rooms;
+			}
+
 			void addRoom(std::shared_ptr<Room> room, std::uint64_t playerId);
 
 			void switchRoomJoinOrExit(std::shared_ptr<Cast::Network::Session> session, std::uint64_t hostSessionId = -1);
@@ -32,13 +38,15 @@ namespace Cast
 
 			void playerForwardToHost(std::uint64_t hostSessionId, std::uint64_t senderSessionId, Common::Network::UnecryptedPacket& packet);
 
+			void setRoomTick(std::uint64_t hostSessionId, std::uint64_t tick);
+
 			void hostForwardToPlayer(std::uint64_t hostSessionId, std::uint64_t receiverSessionId, Common::Network::UnecryptedPacket& packet, bool useHostSessionIdInTcpHeader = true);
 
 			void setMapFor(std::uint64_t playerId, std::uint32_t map);
 
 			void setModeFor(std::uint64_t playerId, std::uint32_t mode);
 
-			void setRoomNumberFor(std::uint64_t playerId, std::uint32_t roomNum);
+			bool setRoomNumberFor(std::uint64_t playerId, std::uint32_t roomNum);
 
 			void endMatch(std::uint64_t hostId);
 

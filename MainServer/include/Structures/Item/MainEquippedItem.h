@@ -1,23 +1,29 @@
-
 #ifndef MAIN_EQUIPPED_ITEM_INFO_H
 #define MAIN_EQUIPPED_ITEM_INFO_H
 
-#include <corecrt.h>
 #include <cstdint>
-#include "MainItemSerialInfo.h"
 #include <array>
+#include "MainItemSerialInfo.h"
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
 		class Item;
-#pragma pack(push, 1)
+
+#ifdef _WIN32
+		using ExpirationTimeType = __time32_t;
+#else
+		using ExpirationTimeType = std::int32_t;
+#endif
+
+PACK_PUSH(1)
 		struct EquippedItem
 		{
 			std::uint32_t type : 9 = 0; 
 			std::uint32_t id : 23 = 0;    
-			__time32_t expirationDate{}; 
+			ExpirationTimeType expirationDate{}; 
 			ItemSerialInfo serialInfo{};
 			std::uint16_t durability{}; 
 			std::uint16_t energy{};
@@ -31,10 +37,9 @@ namespace Main
 			//EquippedItem& operator=(const Item& other);
 			//EquippedItem& operator=(const EquippedItem& other);
 		};
-#pragma pack(pop)
+PACK_POP()
 
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct DetailedEquippedItem : EquippedItem
 		{
 			std::uint16_t characterId{};
@@ -51,9 +56,9 @@ namespace Main
 			{
 			}
 		};
-#pragma pack(pop)
-	
-#pragma pack(push, 1)
+PACK_POP()
+
+PACK_PUSH(1)
 		struct BasicEquippedItem
 		{
 		private:
@@ -74,8 +79,9 @@ namespace Main
 		public:
 			std::array<Data, 17> items{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
+PACK_PUSH(1)
 		struct BasicEquippedItemLobby
 		{
 		private:
@@ -95,8 +101,9 @@ namespace Main
 		public:
 			std::array<Data, 17> items{};
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 
 #endif
+

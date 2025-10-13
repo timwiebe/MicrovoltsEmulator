@@ -7,7 +7,7 @@
 #include "Network/Packet.h"
 #include "../Room/RoomJoinHandler.h"
 #include "../Room/RoomLeaveHandler.h"
-
+#include <cstring> 
 
 namespace Main
 {

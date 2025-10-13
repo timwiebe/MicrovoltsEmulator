@@ -13,6 +13,7 @@ namespace Cast
 			if (playerId < m_playerSessionIdToRoom.size())
 			{
 				m_playerSessionIdToRoom[playerId] = room;
+				m_rooms.push_back(std::move(room));
 			}
 		}
 
@@ -230,6 +231,7 @@ namespace Cast
 			{
 				return room->m_redAssassinPos;
 			}
+			return std::nullopt;
 		}
 
 		void RoomsManager::setModeFor(std::uint64_t playerId, std::uint32_t mode)
@@ -246,17 +248,18 @@ namespace Cast
 		}
 
 
-		void RoomsManager::setRoomNumberFor(std::uint64_t playerId, std::uint32_t roomNum)
+		bool RoomsManager::setRoomNumberFor(std::uint64_t playerId, std::uint32_t roomNum)
 		{
 			if (playerId >= m_playerSessionIdToRoom.size())
-				return;
+				return false;
 
 			auto& room = m_playerSessionIdToRoom[playerId];
 
 			if (!room)
-				return;
+				return false;
 
 			room->setRoomNumber(roomNum);
+			return true;
 		}
 
 		bool RoomsManager::exists(std::uint64_t playerId)
@@ -306,6 +309,8 @@ namespace Cast
 
 			if (mustRoomBeRemoved)
 			{
+				m_rooms.erase(std::remove(m_rooms.begin(), m_rooms.end(), roomToRemove), m_rooms.end());
+
 				for (auto& roomSlot : m_playerSessionIdToRoom)
 				{
 					if (roomSlot == roomToRemove)

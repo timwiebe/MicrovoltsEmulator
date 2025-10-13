@@ -8,6 +8,7 @@
 #include "../../Classes/RoomsManager.h"
 #include "../../Classes/Room.h"
 #include "../../Detail/IpcUtils.h"
+#include <cstring> 
 
 namespace Main
 {
@@ -78,8 +79,9 @@ namespace Main
 				response.setExtra(RoomCreationExtra::CREATION_FAIL);
 				session->asyncWrite(response);
 			}
-			else if (Main::Ipc::M2C_sendRoomNumber(session->getId(), room.getRoomNumber()))
+			else
 			{
+				Main::Ipc::M2C_sendRoomNumber(session->getId(), room.getRoomNumber());
 				room.setStateFor(session->getAccountInfo().uniqueId, Common::Enums::STATE_WAITING);
 				session->setRoomNumber(room.getRoomNumber());
 				const std::pair<std::uint16_t, std::uint16_t> roomInfo{ room.getRoomNumber() - 1, 2 }; // {roomNum, unk}
@@ -96,11 +98,6 @@ namespace Main
 					session->asyncWrite(response);
 				}
 				roomsManager.addRoom(std::move(room));
-			}
-			else
-			{
-				response.setExtra(RoomCreationExtra::CREATION_FAIL);
-				session->asyncWrite(response);
 			}
 
 			END_BENCHMARK(handleRoomCreation, session)

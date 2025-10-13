@@ -11,7 +11,7 @@
 #include "../../include/Network/Packet.h"
 #include "../../include/Enums/MiscellaneousEnums.h"
 #include "../../include/Utils/Parser.h"
-
+#include <cstring> 
 
 #include <iostream>
 

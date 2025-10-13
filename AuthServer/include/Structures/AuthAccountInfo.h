@@ -2,12 +2,13 @@
 #define AUTH_ACCOUNTINFO_H
 
 #include <cstdint>
+#include "Macros.h"
 
 namespace Auth
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct BasicAccountInfo
 		{
 			std::uint32_t accountId{};
@@ -29,7 +30,7 @@ namespace Auth
 			// commandHeader.option = player grade
 			// commandHeader.extra  = login type 
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

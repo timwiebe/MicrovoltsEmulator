@@ -3,13 +3,14 @@
 
 #include "visit_struct/visit_struct.hpp"
 #include <array>
+#include "Macros.h"
 
 // This is used for MVSurge, refer to "CdbItemsInfo" for CMV
 namespace Common
 {
     namespace ConstantDatabase
     {
-#pragma pack(push, 1) 
+PACK_PUSH(1)
         struct CdbItemInfo
         {
             std::uint32_t ii_id = static_cast<std::uint32_t>(-1);
@@ -86,7 +87,7 @@ namespace Common
             constexpr bool isValid() const noexcept { return ii_id != static_cast<std::uint32_t>(-1); }
         };
 
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

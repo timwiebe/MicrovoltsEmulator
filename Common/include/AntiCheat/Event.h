@@ -1,7 +1,6 @@
 #ifndef EVENT_AC_H
 #define EVENT_AC_H
 
-#include "DirectXPackedVector.h"
 #include <string>
 #include <memory>
 #include "../Utils/Utils.h"

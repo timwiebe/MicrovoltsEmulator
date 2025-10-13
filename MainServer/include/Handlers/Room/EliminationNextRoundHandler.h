@@ -289,12 +289,20 @@ namespace Main
 					const auto gainedMp = isFarm ? 0 : ((scoreboardResponse.totalKills * 60 + scoreboardResponse.deaths * 25 + Common::Constants::matchBaseMp) * 3);
 					const auto gainedExp = isFarm ? 0 : ((scoreboardResponse.totalKills * 50 + scoreboardResponse.deaths * 25 + Common::Constants::matchBaseExp) * 3);
 
-					const auto finalGainedExp = gainedExp + (gainedExp * totalExpBonus / 100);
-					const auto finalGainedMp = gainedMp + (gainedMp * totalMpBonus / 100);
+					const auto elapsedMs = timeNow - targetSession->m_matchStartTime;
+					auto elapsedMinutes = static_cast<std::uint64_t>(elapsedMs / 1000 / 60);
+					elapsedMinutes = std::min<std::uint64_t>(elapsedMinutes, 15);
+					constexpr std::uint64_t mpPerMinute = 80;
+					constexpr std::uint64_t expPerMinute = 80;
+					auto gainedMp = isFarm ? 0 : baseMp + (elapsedMinutes * mpPerMinute);
+					auto gainedExp = isFarm ? 0 : baseExp + (elapsedMinutes * expPerMinute);
+					auto finalGainedExp = gainedExp + (gainedExp * totalExpBonus / 100);
+					auto finalGainedMp = gainedMp + (gainedMp * totalMpBonus / 100);
 
 					std::uint32_t now = static_cast<std::uint32_t>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-					std::uint32_t finalGainedExpWithEvent = finalGainedExp;
-					std::uint32_t finalGainedMpWithEvent = finalGainedMp;
+					auto mode = room->getRoomSettings().mode;
+					std::uint32_t finalGainedExpWithEvent = mode == Common::Enums::FreeForAll ? (finalGainedExp / 2) : finalGainedExp;
+					std::uint32_t finalGainedMpWithEvent = mode == Common::Enums::FreeForAll ? (finalGainedMp / 2) : finalGainedMp;
 
 					if (now <= expMpBonusInfo.endDate)
 					{
@@ -369,7 +377,7 @@ namespace Main
 						targetSession->sendRt(static_cast<std::uint32_t>(static_cast<double>(clampedMp)/3));
 						if (room->getRoomSettings().mode != Common::Enums::SquareMode && room->getRoomSettings().mode != Common::Enums::AiBattle)
 						{
-							targetSession->reduceEquippedItemsDurability();
+							targetSession->reduceEquippedItemsDurability(room->getRoomSettings().weaponRestriction);
 						}
 					}
 				}

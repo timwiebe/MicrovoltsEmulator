@@ -2,12 +2,14 @@
 #define ROOM_SETTINGS_UPDATE_H
 
 #include <cstdint>
+#include "Macros.h"
+#include <cstring> 
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomSettingsUpdateBase
 		{
 			std::uint32_t maxPlayers : 5 = 0; // ok
@@ -23,27 +25,27 @@ namespace Main
 			std::uint32_t unknown3 : 1 = 0;
 			std::uint32_t unknown4 : 1 = 0;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomSettingsUpdateTitle
 		{
 			RoomSettingsUpdateBase roomSettingsUpdateBase;
 			char title[30]{};
 			char padding[2]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomSettingsUpdatePassword
 		{
 			RoomSettingsUpdateBase roomSettingsUpdateBase;
 			char password[9]{};
 			char padding[7]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomSettingsUpdateTitlePassword
 		{
 			RoomSettingsUpdateBase roomSettingsUpdateBase;
@@ -68,7 +70,7 @@ namespace Main
 				roomSettingsUpdateBase.weaponRestriction = settings.weaponRestriction;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

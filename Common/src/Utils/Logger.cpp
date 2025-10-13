@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -9,18 +8,23 @@
 #include <format>
 #include <memory>
 #include "../../include/Utils/Logger.h"
+
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 namespace Utils
 {
     void Logger::enableAnsiEscapeCodes()
     {
+#ifdef _WIN32
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
         if (hOut == INVALID_HANDLE_VALUE) return;
 
         DWORD dwMode = 0;
         if (!GetConsoleMode(hOut, &dwMode)) return;
         SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
     }
 
     void Logger::printToConsole(const std::string& message, LogType type)
@@ -64,7 +68,12 @@ namespace Utils
         std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 
         std::tm tm_time{};
-        localtime_s(&tm_time, &now_c);
+#ifdef _WIN32
+        localtime_s(&tm_time, &now_c);   // Windows
+#else
+        localtime_r(&now_c, &tm_time);   // Linux/Unix
+#endif
+
         std::stringstream ss;
         ss << std::put_time(&tm_time, "%Y-%m-%d %X");
         return ss.str();
@@ -81,3 +90,4 @@ namespace Utils
         return "Unknown";
     }
 }
+

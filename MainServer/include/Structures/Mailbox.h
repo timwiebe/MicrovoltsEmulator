@@ -2,13 +2,13 @@
 #define MAILBOX_STRUCTURE_H
 
 #include "AccountInfo/MainAccountUniqueId.h"
-
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct Mailbox
         {
             std::uint32_t accountId{};
@@ -17,9 +17,9 @@ namespace Main
             char nickname[16]{};
             char message[256]{};
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct Giftbox
         {
             std::uint32_t accountId{};
@@ -30,9 +30,9 @@ namespace Main
             char nickname[16]{};
             char message[256]{};
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct Giftbox2
         {
             std::uint32_t accountId{};
@@ -48,7 +48,7 @@ namespace Main
                 serialInfo.itemOrigin = 8; // Main::Enums::ItemFrom::GIFT;
             }
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 	

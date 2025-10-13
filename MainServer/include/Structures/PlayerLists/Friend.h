@@ -5,12 +5,13 @@
 #include <string>
 #include "../AccountInfo/MainAccountUniqueId.h"
 #include <functional>
+#include "Macros.h"
 
 namespace Main
 {
     namespace Structures
     {
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct Friend
         {
             UniqueId targetUniqueId{};
@@ -22,7 +23,7 @@ namespace Main
                 return targetAccountId == other.targetAccountId;
             }
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

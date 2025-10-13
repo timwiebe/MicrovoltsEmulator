@@ -5,6 +5,7 @@
 #include "../ChatCommands.h"
 #include "Utils/Utils.h"
 #include "../../MainServer.h"
+#include <cstring> 
 
 namespace Main
 {

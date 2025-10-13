@@ -141,8 +141,10 @@ namespace Auth
 						playerInfo.setExtra(Auth::Enums::Login::SUCCESS);
 
 						playerInfoStructure.accountId = static_cast<std::uint32_t>(res->getInt("AccountID"));
-						strcpy_s(playerInfoStructure.playerName, res->getString("Nickname").c_str());
-						strcpy_s(playerInfoStructure.clanName, res->getString("Clanname").c_str());
+						std::strncpy(playerInfoStructure.playerName, res->getString("Nickname").c_str(), sizeof(playerInfoStructure.playerName) - 1);
+						playerInfoStructure.playerName[sizeof(playerInfoStructure.playerName) - 1] = '\0';
+						std::strncpy(playerInfoStructure.clanName, res->getString("Clanname").c_str(), sizeof(playerInfoStructure.clanName) - 1);
+						playerInfoStructure.clanName[sizeof(playerInfoStructure.clanName) - 1] = '\0';
 
 						playerInfo.setOption(static_cast<std::uint32_t>(res->getInt("Grade")));
 						playerInfoStructure.level = static_cast<std::uint32_t>(res->getInt("Level")) + 1;

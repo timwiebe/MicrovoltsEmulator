@@ -2,12 +2,13 @@
 #define CGD_CAPSULE_PACKAGE_INFO_H
 
 #include "visit_struct/visit_struct.hpp"
+#include "Macros.h"
 
 namespace Common
 {
 	namespace ConstantDatabase
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CdbCapsulePackageInfo
 		{
 			int gi_id{};
@@ -22,7 +23,7 @@ namespace Common
 			constexpr std::uint32_t getId() const noexcept { return gi_infoid; }
 			constexpr bool isValid() const noexcept { return gi_infoid != static_cast<std::uint32_t>(-1); }
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

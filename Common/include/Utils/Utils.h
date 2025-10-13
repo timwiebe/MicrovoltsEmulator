@@ -22,6 +22,13 @@
 #define SEND_DEBUG_MESSAGE(msg, session) (void)0
 #endif
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <iostream>
+#endif
+
+
 namespace Common
 {
 	namespace Utils
@@ -100,6 +107,17 @@ namespace Common
 			return static_cast<std::uint64_t>(
 				duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()
 				);
+		}
+		
+
+		inline void setConsoleTitle(const std::wstring& title) 
+		{
+		#ifdef _WIN32
+		    SetConsoleTitleW(title.c_str());
+		#else
+		    std::string utf8title(title.begin(), title.end());
+		    std::cout << "\033]0;" << utf8title << "\007";
+		#endif
 		}
 	}
 }

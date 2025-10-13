@@ -77,7 +77,6 @@ namespace Main
 
                     if (*res)
                     { // the party must be closed since the only player that was in it left
-                        selfClanRoom->broadcastMessageToWaitingPlayers("handlePartyRoomLeave: closing party room");
                         clansManager.removeExactRoom(ainfo.clanId, clanRoomNumber);
                         return;
                     }
@@ -91,7 +90,6 @@ namespace Main
 
                     if (room)
                     { // clan vs clan room, notify all players about leaving
-                        room->broadcastMessage("handlePartyRoomLeave: inside  if (room) { ... }");
                         room->removePlayer(session, 27);
                     }
                     else if (!isLeaderLeaving)

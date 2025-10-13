@@ -11,6 +11,7 @@
 #include "../../Structures/Room/RoomJoinLatestInfo.h"
 #include <Enums/PlayerEnums.h>
 #include "../Room/RoomJoinHandler.h"
+#include <cstring> 
 
 namespace Main
 {

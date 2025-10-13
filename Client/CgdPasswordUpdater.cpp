@@ -9,6 +9,7 @@
 #include <optional>
 #include <iomanip>
 #include <cassert>
+#include <cstring> 
 
 const std::string GREEN = "\033[32m";
 const std::string ORANGE = "\033[33m";

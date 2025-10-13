@@ -3,13 +3,14 @@
 
 #include <cstdint>
 #include "AccountInfo/MainAccountUniqueId.h"
+#include "Macros.h"
 
 namespace Main
 {
 	// Todo: Remove assists, recheck this!
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClientEndingMatch
 		{
 			std::uint32_t meleeKills : 8 = 0; // total infections for zombie mode
@@ -32,10 +33,9 @@ namespace Main
 			std::uint32_t u3 : 8 = 0;
 			Main::Structures::UniqueId uniqueId{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ScoreboardResponse
 		{
 			std::uint32_t meleeKills : 8;
@@ -80,8 +80,7 @@ namespace Main
 				};
 			}
 		};
-#pragma pack(pop)
-
+PACK_POP()
 	}
 }
 

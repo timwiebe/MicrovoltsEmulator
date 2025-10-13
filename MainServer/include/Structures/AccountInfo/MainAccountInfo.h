@@ -7,13 +7,13 @@
 #include "Enums/MiscellaneousEnums.h"
 #include "MainAccountUniqueId.h"
 #include "MainAccountAchievements.h"
-
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct AccountInfo
 		{
 			std::uint64_t diorama1 : 23 = 0;
@@ -98,8 +98,7 @@ namespace Main
 			}
 
 		};
-#pragma pack(pop)
-
+PACK_POP()
 	}
 }
 

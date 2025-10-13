@@ -41,7 +41,7 @@ namespace Common
                 return m_itemByType[itemId];
             }
 
-            static bool itemExistsInShop(std::uint32_t itemId) requires std::same_as<T, CdbVendorInfo>
+            static bool itemExistsInShop(std::uint32_t itemId) requires (std::same_as<T, CdbVendorInfo>)
             {
                 return m_shopItemIds.contains(itemId);
             }
@@ -125,8 +125,8 @@ namespace Common
             }
 
             static void initialize(const std::string& filePath, const std::string& fileName)
-                requires std::same_as<T, Common::ConstantDatabase::CdbItemPackageInfo> or std::same_as<T, Common::ConstantDatabase::CdbWeaponPackageInfo>
-                or std::same_as<T, Common::ConstantDatabase::CdbCapsulePackageInfo>
+                requires (std::same_as<T, Common::ConstantDatabase::CdbItemPackageInfo> or std::same_as<T, Common::ConstantDatabase::CdbWeaponPackageInfo>
+                or std::same_as<T, Common::ConstantDatabase::CdbCapsulePackageInfo>)
             {
                 m_cdb.parse_non_unique_key(filePath, fileName);
             }

@@ -8,8 +8,8 @@ namespace Auth
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
-		struct ChannelsInfo
+PACK_PUSH(1)
+struct ChannelsInfo
 		{
 			std::vector<std::uint32_t> channels{};
 
@@ -22,7 +22,7 @@ namespace Auth
 				}
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

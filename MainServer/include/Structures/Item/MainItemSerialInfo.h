@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <ctime>
 #include <compare>
+#include "Macros.h"
 
 #ifdef WIN32
 #include <corecrt.h>
@@ -15,7 +16,7 @@ namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ItemSerialInfo
 		{
 			std::uint64_t itemNumber : 20 = 0; // Note: "0" is treated as a sentinel value for EquippedItem (no item exists with itemNumber = 0 in the database!)
@@ -32,7 +33,7 @@ namespace Main
 				itemCreationDate = static_cast<__time32_t>(std::time(0)); 
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

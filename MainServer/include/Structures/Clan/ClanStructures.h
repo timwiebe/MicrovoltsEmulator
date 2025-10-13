@@ -4,12 +4,14 @@
 #include <cstdint>
 #include "../AccountInfo/MainAccountUniqueId.h"
 #include "../ClientData/Structures.h"
+#include "Macros.h"
+#include <cstring> 
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		// This structure is used when one clicks on "Clan Match" (= info about clan rooms of the target player's clan)
 		struct PartyInfo
 		{
@@ -24,10 +26,10 @@ namespace Main
 			std::uint32_t unknown2 : 12 = 0;
 			char leaderName[16]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
 		// Single info of a player who's waiting in a clan room
-#pragma pack(push,1)
+PACK_PUSH(1)
 		struct PartyPlayerInfo
 		{
 			Main::Structures::UniqueId uid{};
@@ -40,9 +42,9 @@ namespace Main
 			std::uint64_t padding : 4 = 0;
 			char nickname[16]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClanRoomSettings
 		{
 			std::uint32_t mode : 5 = 0; // 19 = bomb battle, 18 = tdm, 17 = eli, 16 = CTB
@@ -60,10 +62,10 @@ namespace Main
 			{
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
 		// Used to send the info of the player who joined the clan match to the other players waiting
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct JoinPartyInfo
 		{
 			char nickname[16]{};
@@ -85,10 +87,9 @@ namespace Main
 				std::memcpy(this->nickname, nickname, Common::Constants::maxNicknameSize);
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-
-#pragma pack (push, 1)
+PACK_PUSH(1)
 		struct RegisteredClanInfo
 		{
 			std::uint64_t clanRoomId : 16 = 0;
@@ -125,8 +126,7 @@ namespace Main
 				std::memcpy(leaderName, initLeaderName, Common::Constants::maxNicknameSize);
 			}
 		};
-
-#pragma pack (pop)
+PACK_POP()
 	}
 }
 

@@ -3,12 +3,13 @@
 
 #include "visit_struct/visit_struct.hpp"
 #include <array>
+#include "Macros.h"
 
 namespace Common
 {
     namespace ConstantDatabase
     {
-#pragma pack(push, 1) 
+PACK_PUSH(1)
         struct CdbWeaponInfo
         {
             std::uint32_t ii_id = static_cast<std::uint32_t>(-1);
@@ -84,8 +85,7 @@ namespace Common
             constexpr std::uint32_t getId() const noexcept { return ii_id; }
             constexpr bool isValid() const noexcept { return ii_id != static_cast<std::uint32_t>(-1); }
         };
-
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

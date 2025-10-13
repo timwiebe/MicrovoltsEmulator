@@ -4,12 +4,13 @@
 #include "Enums/AchievementEnums.h"
 #include "Utils/Logger.h"
 #include <cstdint>
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct AccountAchievements
         {
             // MVS had probably only achievementsTier1
@@ -23,8 +24,8 @@ namespace Main
                 achievementsTier1 |= (static_cast<std::uint64_t>(1) << achievementIdx);
             }
         };
-#pragma pack(pop)
-	}
+PACK_POP()
+    }
 }
 
 #endif

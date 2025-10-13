@@ -2,6 +2,7 @@
 #define ROOM_JOIN_LATEST_INFO_H
 
 #include <cstdint>
+#include "Macros.h"
 
 // This struct is sent to the client as the last one when one joins a room
 // It includes information (such as some room settings) that weren't sent before, e.g. "specialSetting" and "isItemOn"
@@ -9,7 +10,7 @@ namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push,1)
+PACK_PUSH(1)
         struct ModeInfoTDM
         {
             std::uint64_t redscore : 8 = 0;
@@ -20,9 +21,9 @@ namespace Main
             std::uint64_t timelimited : 5 = 0;
             std::uint64_t weaponlimited : 4 = 0;
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push,1)
+PACK_PUSH(1)
         struct ModeInfoFFA
         {
             std::uint64_t timelimited : 5 = 0;
@@ -31,9 +32,9 @@ namespace Main
             std::uint64_t state : 2 = 3;
             std::uint64_t weaponlimited : 4 = 0;
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push,1)
+PACK_PUSH(1)
         struct ModeInfoScrimmage
         {
             std::uint64_t unknown : 45 = 0;
@@ -41,8 +42,8 @@ namespace Main
             std::uint64_t timelimited : 5 = 0;
             std::uint64_t weaponlimited : 4 = 0;
         };
-#pragma pack(pop)
-	}
+PACK_POP()
+    }
 }
 
 #endif

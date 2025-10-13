@@ -71,7 +71,7 @@ namespace Main
 				}
 				else
 				{
-					session->sendMessage("[Handlers::handleGambleItem] Error: this item cannot be sealed!");
+					session->sendMessage("[Handlers::handleGambleItem] Error: this item cannot be gambled!");
 					return;
 				}
 

@@ -6,6 +6,7 @@
 #include "../Persistence/MainDatabaseManager.h"
 #include "../Classes/Player.h"
 #include "../../include/Network/MainSession.h"
+#include <cstring> 
 
 namespace Main
 {

@@ -16,7 +16,7 @@
 #include "../include/Handlers/Item/DeleteItemHandler.h"
 #include "../include/Handlers/Item/GeneralItemHandler.h"
 #include "../include/Handlers/Player/Mailbox/MailboxHandlers.h"
-#include "../include/Handlers/Player/Mailbox/Gifthandlers.h"
+#include "../include/Handlers/Player/Mailbox/GiftHandlers.h"
 #include "../include/Handlers/Item/ItemUpgradeHandler.h"
 #include "../include/Handlers/Item/ItemRepairHandler.h"
 #include "../include/Handlers/CapsuleSpinHandler.h"
@@ -57,7 +57,6 @@
 #include "../include/Handlers/IPC/CastMainCallbacks.h"
 
 #include <source_location>
-#include <windows.h>
 #include "boost/beast.hpp"
 #include "../include/Network/HttpSession.h"
 

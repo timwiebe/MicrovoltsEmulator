@@ -4,13 +4,13 @@
 
 #include <cstdint>
 #include "../../../MainServer/include/Structures/AccountInfo/MainAccountUniqueId.h"
-
+#include "Macros.h"
 
 namespace Cast
 {
     namespace Structures
     {
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SuicideStructure
         {
             std::uint16_t posX;
@@ -21,7 +21,7 @@ namespace Cast
             Main::Structures::UniqueId uniqueId;
             std::uint32_t newHp = 0;
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

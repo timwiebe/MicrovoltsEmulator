@@ -5,30 +5,29 @@
 #include "AccountInfo/MainAccountUniqueId.h"
 #include "Enums/RoomEnums.h"
 #include <vector>
+#include "Macros.h"
 
 namespace Main
 {
     namespace Structures
     {
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SingleModeEvent
         {
             Common::Enums::GameModes gameMode{};
             __time32_t startDate{};
             __time32_t endDate{};
         };
-#pragma pack(pop)
+PACK_POP()
 
-
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SingleMapEvent
         {
             Common::Enums::GameMaps gameMap{};
             __time32_t startDate{};
             __time32_t endDate{};
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

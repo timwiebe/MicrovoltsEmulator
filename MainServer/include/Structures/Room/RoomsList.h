@@ -4,12 +4,14 @@
 #include <cstdint>
 #include <vector>
 #include "Utils/Constants.h"
+#include "Macros.h"
+#include <cstring> 
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct SingleRoom
 		{
 			char title[30]{};
@@ -40,16 +42,16 @@ namespace Main
 
 			SingleRoom() = default;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomsList
 		{
 			std::uint16_t totalRooms1{};
 			std::uint16_t totalRooms2{}; // apparently must be the same as totalRooms1x		
 			std::vector<SingleRoom> rooms{};
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 #endif

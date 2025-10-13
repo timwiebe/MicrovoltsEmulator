@@ -18,6 +18,7 @@
 #include <mariadb/conncpp/Driver.hpp>
 #include <mariadb/conncpp/Connection.hpp>
 #include "Utils/SetupParser.h"
+#include <cstring> 
 
 namespace Main
 {
@@ -279,95 +280,106 @@ namespace Main
             return missions;
         }
 
-        std::optional<Main::Structures::EventMissionInfo> PersistentDatabase::getEventInfo(const std::string& tableName)
-        {
-            try
-            {
-                const std::string query =
-                    "SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp, "
-                    "UNIX_TIMESTAMP(EndDate) AS EndTimestamp "
-                    "FROM " + tableName + " LIMIT 1";
+	std::optional<Main::Structures::EventMissionInfo> PersistentDatabase::getEventInfo(const std::string& tableName)
+	{
+	    try
+	    {
+		const std::string createTableQuery =
+		    "CREATE TABLE IF NOT EXISTS " + tableName + " ("
+		    "StartDate DATETIME NOT NULL, "
+		    "EndDate DATETIME NOT NULL)";
+		std::unique_ptr<sql::PreparedStatement> createStmt(m_con->prepareStatement(createTableQuery));
+		createStmt->executeUpdate();
 
-                std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
-                std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
+		const std::string query =
+		    "SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp, "
+		    "UNIX_TIMESTAMP(EndDate) AS EndTimestamp "
+		    "FROM " + tableName + " LIMIT 1";
+		std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
+		std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
 
-                if (res->next())
-                {
-                    Main::Structures::EventMissionInfo info;
-                    info.startDate = res->getUInt("StartTimestamp");
-                    info.endDate = res->getUInt("EndTimestamp");
-                    return info;
-                }
-                else
-                {
-                    const std::string insertQuery =
-                        "INSERT INTO " + tableName + " (StartDate, EndDate) "
-                        "VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0))";
+		if (res->next())
+		{
+		    Main::Structures::EventMissionInfo info;
+		    info.startDate = res->getUInt("StartTimestamp");
+		    info.endDate = res->getUInt("EndTimestamp");
+		    return info;
+		}
+		else
+		{
+		    const std::string insertQuery =
+		        "INSERT INTO " + tableName + " (StartDate, EndDate) "
+		        "VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0))";
+		    std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
+		    insertStmt->executeUpdate();
+		    return Main::Structures::EventMissionInfo{ 0, 0 };
+		}
+	    }
+	    catch (const sql::SQLException& e)
+	    {
+		::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getEventInfo (" + tableName + ")");
+	    }
 
-                    std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
-                    insertStmt->executeUpdate();
-
-                    return Main::Structures::EventMissionInfo{ 0, 0 };
-                }
-            }
-            catch (const sql::SQLException& e)
-            {
-                ::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getEventInfo (" + tableName + ")");
-            }
-
-            return std::nullopt;
-        }
+	    return std::nullopt;
+	}
 
         std::optional<Main::Structures::CapsuleListDatabase> PersistentDatabase::getCapsuleEvent()
         {
             try
-            {
-                const std::string query = R"(
-                    SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp,
-                           UNIX_TIMESTAMP(EndDate) AS EndTimestamp,
-                           NewMpPrice,
-                           NewRtPrice
-                    FROM CapsuleEvents
-                    LIMIT 1
-                )";
+		{
+		    const std::string createTableQuery = R"(
+			CREATE TABLE IF NOT EXISTS CapsuleEvents (
+			    StartDate DATETIME NOT NULL,
+			    EndDate DATETIME NOT NULL,
+			    NewMpPrice INT NOT NULL,
+			    NewRtPrice INT NOT NULL
+			)
+		    )";
+		    std::unique_ptr<sql::PreparedStatement> createStmt(m_con->prepareStatement(createTableQuery));
+		    createStmt->executeUpdate();
 
-                std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
-                std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
+		    const std::string query = R"(
+			SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp,
+			       UNIX_TIMESTAMP(EndDate) AS EndTimestamp,
+			       NewMpPrice,
+			       NewRtPrice
+			FROM CapsuleEvents
+			LIMIT 1
+		    )";
 
-                if (res->next())
-                {
-                    Main::Structures::CapsuleListDatabase capsule;
-                    capsule.saleEventStartDate = res->getUInt("StartTimestamp");
-                    capsule.saleEventEndDate = res->getUInt("EndTimestamp");
-                    capsule.newMpPrice = res->getUInt("NewMpPrice");
-                    capsule.newRtPrice = res->getUInt("NewRtPrice");
-                    return capsule;
-                }
-                else
-                {
-                    const std::string insertQuery = R"(
-                        INSERT INTO CapsuleEvents (StartDate, EndDate, NewMpPrice, NewRtPrice)
-                        VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0), 0, 0)
-                    )";
+		    std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
+		    std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
 
-                    std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
-                    insertStmt->executeUpdate();
+		    if (res->next())
+		    {
+			Main::Structures::CapsuleListDatabase capsule;
+			capsule.saleEventStartDate = res->getUInt("StartTimestamp");
+			capsule.saleEventEndDate = res->getUInt("EndTimestamp");
+			capsule.newMpPrice = res->getUInt("NewMpPrice");
+			capsule.newRtPrice = res->getUInt("NewRtPrice");
+			return capsule;
+		    }
+		    else
+		    {
+			const std::string insertQuery = R"(
+			    INSERT INTO CapsuleEvents (StartDate, EndDate, NewMpPrice, NewRtPrice)
+			    VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0), 0, 0)
+			)";
 
-                    Main::Structures::CapsuleListDatabase capsule;
-                    capsule.saleEventStartDate = 0;
-                    capsule.saleEventEndDate = 0;
-                    capsule.newMpPrice = 0;
-                    capsule.newRtPrice = 0;
-                    return capsule;
-                }
-            }
-            catch (const sql::SQLException& e)
-            {
-                ::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getCapsuleEvent");
-            }
+			std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
+			insertStmt->executeUpdate();
 
-            return std::nullopt;
-        }
+			Main::Structures::CapsuleListDatabase capsule{};
+			return capsule;
+		    }
+		}
+		catch (const sql::SQLException& e)
+		{
+		    ::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getCapsuleEvent");
+		}
+
+		return std::nullopt;
+	}
 
         bool PersistentDatabase::updateCapsuleEvent(const Main::Structures::CapsuleListDatabase& capsule)
         {
@@ -567,52 +579,57 @@ namespace Main
             return false;
         }
 
-
         std::optional<Main::Structures::ExpMpBonusInfo> PersistentDatabase::getExpMpBonusInfo()
-        {
-            try
-            {
-                const std::string query = R"(
-                    SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp,
-                           UNIX_TIMESTAMP(EndDate) AS EndTimestamp,
-                           ExpBonusPercent,
-                           MpBonusPercent
-                    FROM ExpMpBonusEvents
-                    LIMIT 1
-                )";
+	{
+	    try
+	    {
+		const std::string createTableQuery =
+		    "CREATE TABLE IF NOT EXISTS ExpMpBonusEvents ("
+		    "StartDate DATETIME NOT NULL, "
+		    "EndDate DATETIME NOT NULL, "
+		    "ExpBonusPercent INT NOT NULL, "
+		    "MpBonusPercent INT NOT NULL)";
+		std::unique_ptr<sql::PreparedStatement> createStmt(m_con->prepareStatement(createTableQuery));
+		createStmt->executeUpdate();
 
-                std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
-                std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
+		const std::string query = R"(
+		    SELECT UNIX_TIMESTAMP(StartDate) AS StartTimestamp,
+		           UNIX_TIMESTAMP(EndDate) AS EndTimestamp,
+		           ExpBonusPercent,
+		           MpBonusPercent
+		    FROM ExpMpBonusEvents
+		    LIMIT 1
+		)";
+		std::unique_ptr<sql::PreparedStatement> stmt(m_con->prepareStatement(query));
+		std::unique_ptr<sql::ResultSet> res(stmt->executeQuery());
 
-                if (res->next())
-                {
-                    Main::Structures::ExpMpBonusInfo info;
-                    info.startDate = res->getUInt("StartTimestamp");
-                    info.endDate = res->getUInt("EndTimestamp");
-                    info.expBonusPercent = res->getUInt("ExpBonusPercent");
-                    info.mpBonusPercent = res->getUInt("MpBonusPercent");
-                    return info;
-                }
-                else
-                {
-                    const std::string insertQuery = R"(
-                        INSERT INTO ExpMpBonusEvents (StartDate, EndDate, ExpBonusPercent, MpBonusPercent)
-                        VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0), 0, 0)
-                    )";
+		if (res->next())
+		{
+		    Main::Structures::ExpMpBonusInfo info;
+		    info.startDate = res->getUInt("StartTimestamp");
+		    info.endDate = res->getUInt("EndTimestamp");
+		    info.expBonusPercent = res->getUInt("ExpBonusPercent");
+		    info.mpBonusPercent = res->getUInt("MpBonusPercent");
+		    return info;
+		}
+		else
+		{
+		    const std::string insertQuery = R"(
+		        INSERT INTO ExpMpBonusEvents (StartDate, EndDate, ExpBonusPercent, MpBonusPercent)
+		        VALUES (FROM_UNIXTIME(0), FROM_UNIXTIME(0), 0, 0)
+		    )";
+		    std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
+		    insertStmt->executeUpdate();
+		    return Main::Structures::ExpMpBonusInfo{ 0, 0, 0, 0 };
+		}
+	    }
+	    catch (const sql::SQLException& e)
+	    {
+		::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getExpMpBonusInfo");
+	    }
 
-                    std::unique_ptr<sql::PreparedStatement> insertStmt(m_con->prepareStatement(insertQuery));
-                    insertStmt->executeUpdate();
-
-                    return Main::Structures::ExpMpBonusInfo{ 0, 0, 0, 0 };
-                }
-            }
-            catch (const sql::SQLException& e)
-            {
-                ::Utils::Logger::log("MariaDB exception: " + std::string(e.what()), Utils::LogType::Error, "PersistentDatabase::getExpMpBonusInfo");
-            }
-
-            return std::nullopt;
-        }
+	    return std::nullopt;
+	}
 
         bool PersistentDatabase::updateExpMpBonusInfo(const Main::Structures::ExpMpBonusInfo& info)
         {
@@ -1251,7 +1268,7 @@ namespace Main
                     item.serialInfo.itemCreationDate = static_cast<__time32_t>(resultSet->getInt64("creationDate"));
 
                     item.serialInfo.itemNumber = ++itemNum;
-                    itemNumbersToUpdate.emplace_back(std::pair{ rowId, item.serialInfo.itemNumber });
+		    itemNumbersToUpdate.emplace_back(std::pair{ rowId, static_cast<unsigned long>(item.serialInfo.itemNumber) });
 
                     const std::uint64_t itemDuration_s = static_cast<std::uint64_t>(resultSet->getInt64("ItemDuration"));
                     item.expirationDate = (itemDuration_s <= 2)
@@ -3118,6 +3135,7 @@ namespace Main
 
                 query->setUInt(1, accountId);
                 query->setUInt64(2, mailbox.timestamp); // uniqueId (3) ignored for now
+				query->setUInt64(3, 0);
                 query->setString(4, senderNickname);
                 query->setString(5, mailbox.message);
                 query->setBoolean(6, false);

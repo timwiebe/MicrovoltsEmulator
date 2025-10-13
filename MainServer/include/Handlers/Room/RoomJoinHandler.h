@@ -7,6 +7,7 @@
 #include "../../Structures/Room/RoomJoinLatestInfo.h"
 #include <Enums/PlayerEnums.h>
 #include "../../Structures/Room/RoomJoinLatestInfo.h"
+#include <cstring> 
 
 namespace Main
 {

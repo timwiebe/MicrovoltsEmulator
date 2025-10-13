@@ -24,6 +24,7 @@ namespace Cast
 		std::uint16_t m_serverId;
 		Cast::Network::SessionsManager m_sessionsManager{};
 		static inline Cast::Classes::RoomsManager m_roomsManager{};
+		std::shared_ptr<asio::steady_timer> m_positionTimer;
 
 		tcp::acceptor m_mainServerAcceptor;
 		std::optional<tcp::socket> m_mainSocket;
@@ -34,6 +35,7 @@ namespace Cast
 		CastServer(ioContext& io_context, const std::string& serverIp, std::uint16_t port, std::uint16_t mainPort, std::uint16_t serverId);
 		void asyncAccept();
 		void asyncAcceptMainServer();
+		void tickPositionFlush();
 	};
 }
 

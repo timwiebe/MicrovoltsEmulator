@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include "../Item/MainItemSerialInfo.h"
+#include "Macros.h"
 
 // NOTE:
 // To correctly "read" client data:
@@ -14,83 +15,83 @@ namespace Main
 {
 	namespace ClientData
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct Ping
 		{
 			std::uint32_t unknown : 10 = 0; 
 			std::uint32_t ping : 10 = 0;
 			std::uint32_t rest : 12 = 0;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ItemRefund
 		{
 			Main::Structures::ItemSerialInfo serialInfo{};
 			std::uint32_t mpToAdd{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ItemAddEnergy
 		{
 			Main::Structures::ItemSerialInfo serialInfo{};
 			std::uint32_t usedEnergy{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct MailboxMessage
 		{
 			char nickname[16]{};
 			char message[256]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomInfo
 		{
 			std::uint16_t roomNumber{};
 			std::uint16_t unknown{ 2 }; // seemingly always 2 for some reason
 			char password[9]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClanRoomInfo
 		{
 			std::uint16_t clanId{};
 			std::uint16_t roomNumber{};
 			char password[9]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct BoxOpen
 		{
 			Main::Structures::ItemSerialInfo serialInfo;
 			Main::Structures::ItemSerialInfo serialInfo2; // e.g. capsule
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct UpgradeReset
 		{
 			Main::Structures::ItemSerialInfo weaponToResetSerialInfo;
 			Main::Structures::ItemSerialInfo upgradeResetItemSerialInfo;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CapsuleSpin
 		{
 			std::uint32_t capsuleId{};
 			std::uint32_t currencySpent{};
 			std::uint64_t unknown{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClientEndingMatchHeader
 		{
 			std::uint32_t redScore : 8 = 0;
@@ -98,18 +99,18 @@ namespace Main
 			std::uint32_t unknown1 : 8 = 0; // Seems related to num of players
 			std::uint32_t unknown2 : 8 = 0; // Seems related to num of players
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct SinglewaveEndRequest
 		{
 			std::uint32_t type;
 			std::uint32_t score;
 			std::uint32_t stage;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClanRoomSettings
 		{
 			std::uint16_t unknown1 : 4 = 0;
@@ -117,9 +118,9 @@ namespace Main
 			std::uint16_t map : 7 = 0;
 			std::uint16_t unknown = 0;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClientVersion
 		{
 			std::uint32_t ver4 : 8 = 0;
@@ -132,9 +133,9 @@ namespace Main
 				return ver2 == v1 && ver3 == v2 && ver4 == v3;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ClientAuthorization
 		{
 			std::uint32_t accountID;
@@ -142,7 +143,7 @@ namespace Main
 			std::uint32_t localIp;
 			ClientVersion clientVersion;
 		};
-#pragma pack(pop)
+PACK_POP()
 
 		struct EventMissionPoint
 		{
@@ -165,31 +166,31 @@ namespace Main
 			Main::Structures::ItemSerialInfo serialInfo;
 		};
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct PlayerTeamInfo
 		{
 			Main::Structures::UniqueId uid;
 			std::uint32_t team;	
 			char nickname[16]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct ItemRepair
 		{
 			std::uint32_t newTotalRT{};
 			std::uint32_t newTotalMP{};
 			std::vector<Main::Structures::ItemSerialInfo> serialInfo;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct SingleWeaponDurabilityDamage
 		{
 			Main::Structures::ItemSerialInfo serialInfo{};
 			std::uint32_t durabilityToRemove;
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 #endif

@@ -8,6 +8,8 @@
 #include <Enums/RoomEnums.h>
 #include <Utils/Utils.h>
 #include <Utils/SetupParser.h>
+#include <Structures/PlayerPositionFromServer.h>
+#include <Utils/Utilities.h>
 
 namespace Cast
 {
@@ -385,7 +387,41 @@ namespace Cast
 					broadcastToMatch(response);
 				}
 			}
-
 		}
+
+		void Room::enqueuePosition(Common::Network::UnecryptedPacket&& pkt) 
+		{
+			m_pendingPositions.push_back(std::move(pkt));
+		}
+
+		void Room::flushPendingPositions()
+		{
+			if (m_pendingPositions.empty()) return;
+
+			static std::array<std::uint8_t, 2048> batchBuffer;
+			std::size_t totalSize = 0;
+			std::size_t count = 0;
+
+			for (auto& pkt : m_pendingPositions)
+			{
+				const auto size = pkt.getDataSize();
+				if (totalSize + size > 2036) break;  // 8 bytes header + 4 bytes roomtick
+				std::memcpy(batchBuffer.data() + totalSize, pkt.getData(), size);
+				totalSize += size;
+				++count;
+			}
+
+			//const std::uint32_t serverTick = m_roomTick - (((Common::Utils::getCurrentTimestampMs() - timeSinceLastRestart) / 10) - m_roomTick);
+			std::memmove(batchBuffer.data() + sizeof(m_roomTick), batchBuffer.data(), totalSize);
+			std::memcpy(batchBuffer.data(), &m_roomTick, sizeof(m_roomTick));
+			totalSize += sizeof(m_roomTick);
+			static Common::Network::UnecryptedPacket batch(2048, 322, static_cast<uint32_t>(count));
+			batch.setOption(static_cast<uint32_t>(count));
+			batch.setData(batchBuffer.data(), static_cast<uint16_t>(totalSize));
+
+			broadcastToRoom(batch);
+			m_pendingPositions.clear();
+		}
+
 	};
 }

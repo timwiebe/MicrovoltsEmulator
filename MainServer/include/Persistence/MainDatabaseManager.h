@@ -2,7 +2,7 @@
 #define MAIN_DATABASE_MANAGER_H
 
 #include <string>
-
+#include <thread>
 #include "../MainEnums.h"
 #include "Utils/SetupParser.h"
 #include "Utils/Logger.h"

@@ -15,6 +15,7 @@
 #include "../Network/MainSession.h"
 #include "../Structures/Room/RoomPlayerInfo.h"
 #include "../../include/Structures/EndScoreboard.h"
+#include <cstring> 
 
 namespace Main
 {

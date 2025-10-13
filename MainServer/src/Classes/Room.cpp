@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <random>
+#include <cstring> 
 
 namespace Main
 {

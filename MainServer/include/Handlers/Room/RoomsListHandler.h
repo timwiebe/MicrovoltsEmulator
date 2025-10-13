@@ -6,6 +6,7 @@
 #include "../../MainEnums.h"
 #include "../../Classes/RoomsManager.h"
 #include <memory>
+#include <cstring> 
 
 namespace Main
 {

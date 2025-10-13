@@ -15,6 +15,17 @@ I really hope this encourages more devs to get involved with the game and keep i
 - Make sure that the game stays alive even in the future.
 - Allow people to further enhance the game's possibilities.
 
+## Community Driven
+This emulator is fully community driven, thus open source.
+The community not only works hard to make this emulator freely available to everyone; they also work on many new additions, fixes and client patches as shown in the ToyBattles project:
+- The emulator keeps getting worked on,
+- New (server sided) modes,
+- New maps,
+- Better UI and UI performance boosts,
+- New items: weapons, recolors, completely new additions, items
+- Huge cgd.dip additions & improvements
+- ... and so much more!
+- 
 ## Demonstration
 ![image](https://github.com/user-attachments/assets/02fcbfa0-530a-403b-8279-72ba8193d823)
 

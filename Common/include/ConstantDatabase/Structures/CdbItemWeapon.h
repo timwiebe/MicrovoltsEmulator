@@ -4,13 +4,14 @@
 #include "visit_struct/visit_struct.hpp"
 #include "CdbWeaponsInfo.h"
 #include "CdbItemInfo.h"
+#include "Macros.h"
 
 namespace Common
 {
 	namespace ConstantDatabase
 	{
 		// Common stuff between CdbItem and CdbWeapons to reduce map lookups in Cdb.h and CdbUtils.h
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CdbItemWeapon
 		{
 			std::uint32_t ii_id = static_cast<std::uint32_t>(-1);
@@ -54,7 +55,7 @@ namespace Common
 
 			constexpr std::uint32_t getId() const noexcept { return ii_id; }
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

@@ -7,7 +7,7 @@
 #include "../Classes/RoomsManager.h"
 #include "../ChatCommands/ChatCommands.h"
 #include "../Classes/Room.h"
-
+#include <cstring> 
 #include <vector>
 
 namespace Main
@@ -40,7 +40,7 @@ namespace Main
 			Main::Persistence::MainScheduler& scheduler, const Main::Network::Session::AccountInfo& accountInfo, Main::MainServer& mainSv)
 		{
 			const std::string command{ reinterpret_cast<const char*>(request.getData() + 1), static_cast<std::size_t>(request.getOption() - 1) };
-			if (command == "commands")
+			if (command == "commands" || command == "?")
 			{
 				Main::Command::ChatCommands::showUsages(session, response, static_cast<Common::Enums::PlayerGrade>(accountInfo.playerGrade));
 				return;

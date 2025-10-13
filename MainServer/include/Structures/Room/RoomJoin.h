@@ -3,6 +3,9 @@
 
 #include <cstdint>
 #include "Utils/Constants.h"
+#include "Macros.h"
+#include <cstring> 
+
 // This structure is sent from server => client when a room is entered
 // // MISSING: specific room setting [eli => num of rounds, TDM => num of total kills, etc.] 
 
@@ -10,7 +13,7 @@ namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push,1)
+PACK_PUSH(1)
 		struct RoomJoin
 		{
 			std::uint32_t map : 7 = 0;
@@ -48,9 +51,9 @@ namespace Main
 				std::memcpy(this->password, password.data(), Common::Constants::maxPassword);
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct RoomInviteFollow
 		{
 			std::uint16_t serverId{};
@@ -61,7 +64,7 @@ namespace Main
 			char roomTitle[32]{};
 			//char password[14]{};
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

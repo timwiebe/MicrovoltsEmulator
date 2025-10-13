@@ -11,13 +11,14 @@
 #include "ConstantDatabase/Structures/CdbWeaponsInfo.h"
 #include "../../Detail/CdbUtils.h"
 #include "ItemId.h"
+#include "Macros.h"
 
 // Note: Creation date cannot be 0 (otherwise the client doesn't know how to handle equipping/unequipping) !!!
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct SpawnedItem
 		{
 			Main::Structures::ItemId itemId;
@@ -42,9 +43,9 @@ namespace Main
 				serialInfo.itemOrigin = Main::Enums::ItemFrom::SHOP;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct BoxItem
 		{
 			Main::Structures::ItemId itemId;
@@ -64,9 +65,9 @@ namespace Main
 			{
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct GiftItem
 		{
 			std::uint64_t clientData{}; // includes uint32_t unknown, uint32_t timestamp => client uses this to delete the gift from the list of gifts once opened
@@ -82,9 +83,9 @@ namespace Main
 				serialInfo.itemOrigin = Main::Enums::ItemFrom::SHOP;
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct WeeklyReward
 		{
 			std::uint64_t unknown : 16 = 0;
@@ -98,9 +99,9 @@ namespace Main
 				day = std::chrono::weekday{ std::chrono::floor<std::chrono::days>(std::chrono::current_zone()->to_local(std::chrono::system_clock::now())) }.iso_encoding();
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct MonthlyReward
 		{
 			std::uint64_t month : 16 = 0;
@@ -117,7 +118,7 @@ namespace Main
 				day = static_cast<std::uint64_t>(unsigned{ ymd.day() });   
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

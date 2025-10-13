@@ -7,6 +7,10 @@ One of the main goals of version 2.0 was to clean up the entire codebase — tha
 
 The code from version 1.0 worked, but it had a lot of problems when it came to maintainability and readability. It was messy in some places, hard to follow, and had some tricky lifetime issues, especially with how ASIO was used. It just wasn’t easy to work with, especially for anyone new coming into the project.
 
+### Cross Platform
+Finally, the project is starting to work on other platforms too!
+Currently, the project has been tested with Windows (MSVC) and Linux (GCC). 
+
 ### Code Organization & Readability
 Version 2.0 changes all that. Things are now much more organized, and the code is way easier to read. If you’re opening the project for the first time, it should be a lot more approachable now.
 

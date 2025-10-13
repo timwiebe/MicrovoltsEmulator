@@ -2,13 +2,13 @@
 #define MAIN_ACOUNT_UNIQUE_ID_H
 
 #include <cstdint>
-
+#include "Macros.h"
 
 namespace Main
 {
     namespace Structures
     {
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct UniqueId
         {
             std::uint32_t session : 16 = 0; 
@@ -17,7 +17,7 @@ namespace Main
 
             bool operator==(const UniqueId& other) const = default;
         };
-#pragma pack(pop)
+PACK_POP()
     }
 }
 

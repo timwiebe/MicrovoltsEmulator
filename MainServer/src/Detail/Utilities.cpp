@@ -3,6 +3,7 @@
 #include "../../include/Classes/Room.h"
 #include "../../include/Classes/RoomsManager.h"
 
+
 namespace Main
 {
 	namespace Details

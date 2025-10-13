@@ -330,7 +330,7 @@ namespace Main
 
 			void sendRt(std::uint32_t rtToAdd);
 
-			void reduceEquippedItemsDurability();
+			void reduceEquippedItemsDurability(std::uint32_t weaponRestriction);
 
 			void updateItemDurability(std::uint32_t itemNumber, std::uint32_t newDurability);
 

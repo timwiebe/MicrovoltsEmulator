@@ -2,13 +2,14 @@
 #define TRADE_PLAYER_INFO_H
 
 #include <cstdint>
+#include "Macros.h"
 
 // Whenever one player adds an item to the trade system this structure is used
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct TradePlayerInfo
 		{
 			std::uint32_t unused{};
@@ -22,7 +23,7 @@ namespace Main
 			{
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

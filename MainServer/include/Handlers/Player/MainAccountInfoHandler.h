@@ -34,7 +34,6 @@ namespace Main
 			accountInfo.uniqueId.session = session->getId();
 			accountInfo.uniqueId.server = serverId;
 			accountInfo.serverTime = accountInfo.getUtcTimeMs() - timeSinceLastServerRestart;
-
 			session->setAccountInfo(accountInfo);
 			sessionsManager.addSession(session);
 

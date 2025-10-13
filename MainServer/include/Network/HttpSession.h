@@ -8,6 +8,7 @@
 #include "boost/beast/ssl/ssl_stream.hpp"
 #include <format>       
 #include "jwt-cpp/jwt.h"
+#include <cstring> 
 
 namespace Main
 {

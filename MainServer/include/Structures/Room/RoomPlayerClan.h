@@ -2,12 +2,13 @@
 #define ROOM_PLAYER_CLAN_H
 
 #include <cstdint>
+#include "Macros.h"
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct PlayerClan
 		{
 			char clanName[16]{};
@@ -17,7 +18,7 @@ namespace Main
 			std::uint64_t unknown2 : 27 = 0; // maybe clan id?
 			std::uint64_t unused : 3 = 0;
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 #endif

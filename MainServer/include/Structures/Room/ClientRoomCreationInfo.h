@@ -5,15 +5,17 @@
 #include <iostream> 
 #include "../../Common/include/Enums/RoomEnums.h"
 #include "../../Detail/Utilities.h"
-// These structures are sent from client => server when a new room is created
+#include "Macros.h"
+#include <cstring> 
 
+// These structures are sent from client => server when a new room is created
 // Team balance is apparently NOT sent ==> on room creation, set it up based on the chosen mode
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct RoomSettings
         {
             std::uint32_t time : 5 = 0;
@@ -46,10 +48,9 @@ namespace Main
 
             RoomSettings() = default;
         };
+PACK_POP()
 
-#pragma pack(pop)
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct CompleteRoomInfo
 		{
 			RoomSettings roomSettings{};
@@ -67,7 +68,7 @@ namespace Main
 
             CompleteRoomInfo() = default;
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

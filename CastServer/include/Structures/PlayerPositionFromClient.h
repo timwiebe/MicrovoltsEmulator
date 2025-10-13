@@ -2,8 +2,9 @@
 #define PLAYER_POSITION_STRUCTURE_H
 
 #include <cstdint>
-#include "DirectXPackedVector.h"
+#include <directxmath/DirectXPackedVector.h>
 #include "AntiCheat/Event.h"
+#include "Macros.h"
 
 namespace Cast
 {
@@ -54,7 +55,7 @@ namespace Cast
                 return (sign << 31) | 0x7F800000; // Infinity case
         }
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct PositionStruct
         {
             DirectX::PackedVector::HALF positionX{};
@@ -67,9 +68,9 @@ namespace Cast
                 return isBadPosition(positionX) || isBadPosition(positionY) || isBadPosition(positionZ);
             }
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct DirectionStruct
         {
             DirectX::PackedVector::HALF directionX{};
@@ -82,10 +83,9 @@ namespace Cast
                 return isBadPosition(directionX) || isBadPosition(directionY) || isBadPosition(directionZ);
             }
         };
+PACK_POP()
 
-#pragma pack(pop)
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct BulletsStruct
         {
             DirectX::PackedVector::HALF bullet1{};
@@ -100,10 +100,10 @@ namespace Cast
                 return isBadPosition(bullet1) || isBadPosition(bullet2) || isBadPosition(bullet3) || isBadPosition(bullet4);
             }
         };
+PACK_POP()
 
-#pragma pack(pop)
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct JumpStruct
         {
             DirectX::PackedVector::HALF jump1;
@@ -115,11 +115,9 @@ namespace Cast
                 return isBadPosition(jump1) || isBadPosition(jump2);
             }
         };
-
-#pragma pack(pop)
-
+PACK_POP()
         
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct ClientPlayerInfoBasic
         {
             PositionStruct position;
@@ -135,11 +133,11 @@ namespace Cast
             {
                 return position.isBadPos() || direction.isBadDir();
             }
+
         };
+PACK_POP()
 
-#pragma pack(pop)
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct ClientPlayerInfoJump
         {
             ClientPlayerInfoBasic playerPositionBasic;
@@ -150,10 +148,10 @@ namespace Cast
                 return playerPositionBasic.isBad() || jumpStruct.isBadJump();
             }
         };
+PACK_POP()
 
-#pragma pack(pop)
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct ClientPlayerInfoBullet
         {
             ClientPlayerInfoBasic playerPositionBasic;
@@ -164,9 +162,10 @@ namespace Cast
                 return playerPositionBasic.isBad() || bulletStruct.isBadBullets();
             }
         };
-#pragma pack(pop)
-	
-#pragma pack(push, 1)
+PACK_POP()
+
+
+PACK_PUSH(1)
         struct ClientPlayerInfoComplete
         {
             ClientPlayerInfoBasic playerPositionBasic;
@@ -178,19 +177,18 @@ namespace Cast
                 return playerPositionBasic.isBad() || bulletStruct.isBadBullets() || jumpStruct.isBadJump();
             }
         };
-#pragma pack(pop)
+PACK_POP()
 
-
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SinglePlayerJoinInfo
         {
             char u0[16]{};
             Main::Structures::UniqueId uid;
             std::uint32_t unknown{};
         };  
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SinglePlayerJoinInfoResponse
         {
             Main::Structures::UniqueId uid;
@@ -198,9 +196,9 @@ namespace Cast
             std::uint32_t mode : 5 = 0; // client checks whether the mode is zombie for some reason
             std::uint32_t playerState : 4 = 0;
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1
+PACK_PUSH(1)
         struct PlayerRespawnPosition
         {
             std::uint16_t x{};
@@ -218,6 +216,7 @@ namespace Cast
                 return *this;
             }
         };
+PACK_POP()
     }
 }
 #endif

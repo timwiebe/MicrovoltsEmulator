@@ -4,13 +4,14 @@
 
 #include <cstdint>
 #include "PlayerPositionFromClient.h"
+#include "Macros.h"
 
 namespace Cast
 {
     namespace Structures
     {
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct SpecificInfo
         {
             std::uint32_t sessionId : 14 = 0;
@@ -22,12 +23,12 @@ namespace Cast
             std::uint32_t unknown : 1 = true;
             std::uint32_t enableJump : 1 = false;
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct PlayerInfoBasicResponse
         {
-            std::uint32_t tick{};
+           // std::uint32_t tick{};
             SpecificInfo specificInfo{}; 
             Cast::Structures::PositionStruct position;   
             Cast::Structures::DirectionStruct direction; 
@@ -36,20 +37,20 @@ namespace Cast
             std::uint32_t rotation3 : 9 = 0;
             std::uint32_t currentWeapon : 4 = 0; 
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct PlayerInfoResponseWithJump
         {
             PlayerInfoBasicResponse playerInfoBasicResponse;
             Cast::Structures::JumpStruct jump{};
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct PlayerInfoResponseWithBullets
         {
-            std::uint32_t tick{}; 
+           // std::uint32_t tick{}; 
             SpecificInfo specificInfo{}; 
             Cast::Structures::PositionStruct position; 
             Cast::Structures::DirectionStruct direction; 
@@ -59,16 +60,15 @@ namespace Cast
             std::uint32_t rotation3 : 9 = 0; 
             std::uint32_t currentWeapon : 4 = 0; 
         };
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
         struct PlayerInfoResponseComplete
         {
             PlayerInfoResponseWithBullets playerInfoBasicResponse;
             Cast::Structures::JumpStruct jump{};
         };
-#pragma pack(pop)
-
+PACK_POP()
 
     }
 }

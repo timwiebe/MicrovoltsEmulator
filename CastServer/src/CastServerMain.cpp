@@ -25,7 +25,7 @@ void printInitialInformation()
 
 int main()
 {
-	SetConsoleTitleW(L"Microvolts Cast Server");
+	Common::Utils::setConsoleTitle(L"Microvolts Cast Server");
 	printInitialInformation();
 
 	asio::io_context io_context;

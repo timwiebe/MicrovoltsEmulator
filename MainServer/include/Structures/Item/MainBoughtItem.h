@@ -10,12 +10,14 @@
 #include "ConstantDatabase/Structures/CdbItemInfo.h"
 #include "ConstantDatabase/Structures/CdbWeaponsInfo.h"
 #include "ItemId.h"
+#include "Macros.h"
+
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct BoughtItem
 		{
 			Main::Structures::ItemId itemId;
@@ -38,9 +40,9 @@ namespace Main
 
 			BoughtItem() = default;
 		};
-#pragma pack(pop)
+PACK_POP()
 
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct BoughtItemToProlong
 		{
 			ItemSerialInfo serialInfo{};
@@ -52,7 +54,7 @@ namespace Main
 			{
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

@@ -57,7 +57,7 @@ namespace Main
 							session->sendMessage("You cannot join this friend as you're already in their room.");
 							return;
 						}
-						else if (targetRoomNum >= Common::Constants::maxPartiesPerClan)
+						else if (targetRoomNum >= Common::Constants::clanRoomNumberStart)
 						{
 							session->sendMessage("The target user is in a clan room");
 							return;

@@ -6,13 +6,14 @@
 #include <array>
 #include "MainAccountAchievements.h"
 #include "MainAccountInfo.h"
-
+#include "Macros.h"
+#include <cstring> 
 
 namespace Main
 {
 	namespace Structures
 	{
-#pragma pack(push, 1)
+PACK_PUSH(1)
 		struct LobbyAccountInfo
 		{
 			std::uint64_t dioramaInfo{};
@@ -71,7 +72,7 @@ namespace Main
 				std::memcpy(clanName, accountInfo.clanName, 16);
 			}
 		};
-#pragma pack(pop)
+PACK_POP()
 	}
 }
 

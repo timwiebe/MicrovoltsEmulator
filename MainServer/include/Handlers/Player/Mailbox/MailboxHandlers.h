@@ -6,6 +6,7 @@
 #include "../../../../include/MainEnums.h"
 #include "../../../Network/MainSessionManager.h"
 #include "Utils/Constants.h"
+#include <cstring> 
 
 namespace Main
 {

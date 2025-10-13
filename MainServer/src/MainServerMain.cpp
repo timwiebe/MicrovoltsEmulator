@@ -70,7 +70,7 @@ void initializeCdbFiles()
 
 int main()
 {
-	SetConsoleTitleW(L"Microvolts Main Server");
+	Common::Utils::setConsoleTitle(L"Microvolts Main Server");
 
 	printInitialInformation();
 	initializeCdbFiles();

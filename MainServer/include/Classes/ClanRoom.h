@@ -12,6 +12,7 @@
 #include "../Structures/Room/ClientRoomCreationInfo.h"
 #include <source_location>
 #include <expected>
+#include <cstring> 
 
 namespace Main
 {
